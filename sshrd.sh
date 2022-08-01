@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pzb -g BuildManifest.plist $1
+macos/pzb -g BuildManifest.plist $1
