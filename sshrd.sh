@@ -3,8 +3,10 @@
 chmod +x macos/*
 
 
-: ${1?"Usage: $0 ipsw link"}
-: ${2?"Usage: $0 board cfg, can be iphone6 for example too (no AP part)"}
+: ${1?"1st argument: ipsw link"}
+: ${2?"2nd argument: board cfg, can be iphone6 for example too (no AP part)"}
+: ${3?"3rd argument: model identifier"}
+: ${4?"4th argument: ios version from ipsw link"}
 
 
 macos/pzb -g BuildManifest.plist $1 1> /dev/null
