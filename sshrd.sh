@@ -9,3 +9,4 @@ chmod +x macos/*
 
 macos/pzb -g BuildManifest.plist $1 1> /dev/null
 macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1 1> /dev/null
+macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1 1> /dev/null
