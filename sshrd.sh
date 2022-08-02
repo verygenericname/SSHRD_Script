@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chmod +x macos/*
+
 
 : ${1?"Usage: $0 ipsw link"}
 : ${2?"Usage: $0 board cfg (no AP part)"}
