@@ -15,6 +15,6 @@ macos/pzb -g BuildManifest.plist $1 1> /dev/null
 macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
 macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
-macos/pzb -g $6.trustcache $1
+macos/pzb -g Firmware/$6.trustcache $1
 macos/pzb -g $7 $1
 macos/pzb -g $6 $1
