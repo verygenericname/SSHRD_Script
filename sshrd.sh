@@ -5,6 +5,7 @@ chmod +x macos/*
 
 : ${1?"1st argument: ipsw link"}
 : ${2?"2nd argument: board cfg, can be iphone6 for example too (no AP part, lowercase)"}
+: ${3?"3rd argument: can be any shsh blob, just make sure it's from the same ecid as your phone"}
 
 
 macos/pzb -g BuildManifest.plist $1 1> /dev/null
