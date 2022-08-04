@@ -21,3 +21,13 @@ macos/pzb -g $7 $1
 macos/pzb -g $6 $1
 macos/img4 -i iBSS.$2.RELEASE.im4p -o iBSS.dec -k $4
 macos/img4 -i iBEC.$2.RELEASE.im4p -o iBEC.dec -k $5
+macos/iBoot64Patcher iBSS.dec iBSS.patched
+macos/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
+macos/iBoot64Patcher iBEC.dec iBEC.patched -b "rd=md0 -v wdt=-9999999"
+macos/img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec
+macos/img4 -i $7 -o kcache.raw
+macos/Kernel64Patcher kcache.raw kcache.patched -a
+python3 kerneldiff.py kcache.raw kcache.patched
+macos/img4 -i $7 -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+macos/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
+macos/img4 -i $6.trustcache -o trustcache.img4 -M IM4M -T rtsc
