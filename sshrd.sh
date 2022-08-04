@@ -19,5 +19,5 @@ macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
 macos/pzb -g Firmware/$6.trustcache $1
 macos/pzb -g $7 $1
 macos/pzb -g $6 $1
-img4 -i iBSS.$2.RELEASE.im4p -o iBSS.dec -k $4
-img4 -i iBEC.$2.RELEASE.im4p -o iBEC.dec -k $5
+macos/img4 -i iBSS.$2.RELEASE.im4p -o iBSS.dec -k $4
+macos/img4 -i iBEC.$2.RELEASE.im4p -o iBEC.dec -k $5
