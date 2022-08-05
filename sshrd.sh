@@ -15,8 +15,8 @@ macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
 macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
 macos/pzb -g Firmware/$6.trustcache $1
-macos/pzb -g /usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:KernelCache:Info:Path" $1
-macos/pzb -g /usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" $1
+macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:KernelCache:Info:Path") $1
+macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") $1
 macos/img4 -i iBSS.$2.RELEASE.im4p -o iBSS.dec -k $4
 macos/img4 -i iBEC.$2.RELEASE.im4p -o iBEC.dec -k $5
 macos/iBoot64Patcher iBSS.dec iBSS.patched
