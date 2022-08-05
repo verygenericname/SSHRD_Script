@@ -9,8 +9,8 @@ chmod +x macos/*
 : ${4?"4th argument: iv and key combined together for the ibss from the ipsw link you provided. You can get them from the iphonewiki"}
 : ${5?"5th argument: iv and key combined together for the ibec from the ipsw link you provided. You can get them from the iphonewiki"}
 
-macos/img4tool -e -s $3 -m IM4M
-macos/pzb -g BuildManifest.plist $1
+img4tool -e -s $3 -m IM4M
+macos/pzb -g BuildManifest.plist $1 1> /dev/null
 if [[ "$6" == "" ]]; then
     macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
     macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
@@ -20,7 +20,9 @@ macos/pzb -g Firmware/dfu/iBEC.$6.RELEASE.im4p $1
 fi
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
 macos/pzb -g Firmware/$(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache $1
-if [[ "$6" == "" ]]; then
+if [[ "$2" == "n66m" ]]; then
+macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
+elif [[ "$6" == "" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 else
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
@@ -37,14 +39,18 @@ macos/iBoot64Patcher iBSS.dec iBSS.patched
 macos/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
 macos/iBoot64Patcher iBEC.dec iBEC.patched -b "rd=md0 -v wdt=-9999999"
 macos/img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec
-if [[ "$6" == "" ]]; then
+if [[ "$2" == "n66m" ]]; then
+macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
+elif [[ "$6" == "" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 else
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 fi
 macos/Kernel64Patcher kcache.raw kcache.patched -a
 python3 kerneldiff.py kcache.raw kcache.patched
-if [[ "$6" == "" ]]; then
+if [[ "$2" == "n66m" ]]; then
+macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+elif [[ "$6" == "" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 else
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
@@ -76,7 +82,7 @@ mv devicetree.img4 sshramdisk
 mv kernelcache.img4 sshramdisk
 mv iBEC.img4 sshramdisk
 mv iBSS.img4 sshramdisk
-echo "we are done, please use boot.sh (or bootA10+ for a10 above) to boot your device in the sshramdisk folder"
+echo "we are done, please use boot.sh to boot your device"
 echo cleanup...
 if [[ "$6" == "" ]]; then
     rm iBSS.$2.RELEASE.im4p
@@ -89,7 +95,9 @@ rm iBSS.dec
 rm iBEC.dec
 rm iBSS.patched
 rm iBEC.patched
-if [[ "$6" == "" ]]; then
+if [[ "$2" == "n66m" ]]; then
+rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
+elif [[ "$6" == "" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 else
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
