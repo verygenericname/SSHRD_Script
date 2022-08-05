@@ -63,6 +63,7 @@ hdiutil attach -mountpoint /tmp/SSHRD ramdisk.dmg
 macos/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
 macos/ldid -Sdd_ent.xml /tmp/SSHRD/bin/dd
 macos/ldid -Sent.xml /tmp/SSHRD/sbin/mount
+macos/ldid -Sent.xml /tmp/SSHRD/sbin/umount
 macos/ldid -M -Sent.xml /tmp/SSHRD/bin/*
 macos/ldid -M -Sent.xml /tmp/SSHRD/usr/bin/*
 macos/ldid -M -Sent.xml /tmp/SSHRD/usr/sbin/*
