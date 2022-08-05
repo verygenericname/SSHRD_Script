@@ -15,6 +15,14 @@ else
     mv gaster/gaster macos/
     rm -rf gaster gaster-mac.zip
 fi
+if [[ -e macos/ldid ]]; then
+    echo "ldid downloaded already."
+else
+    curl -LO https://nightly.link/ProcursusTeam/ldid/workflows/build/master/ldid_macos_x86_64.zip
+    unzip ldid_macos_x86_64.zip
+    mv ldid macos/
+    rm -rf ldid_macos_x86_64.zip
+fi
 chmod +x macos/*
 macos/gaster pwn
 macos/img4tool -e -s $3 -m IM4M
