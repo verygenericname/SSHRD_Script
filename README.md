@@ -18,8 +18,9 @@ Create and boot a SSH ramdisk on checkm8 devices
 # Prerequsites
 1. A computer running macOS
     - Linux may be supported in the future.
-2. A checkm8 device (A7-A11) on iOS 12+
-3. libimobiledevice installed on your Mac
+2. A checkm8 device (A7-A11)
+3. iOS 12+ IPSW link
+4. libimobiledevice installed on your Mac
     - [brew](https://brew.sh) is required.
     - `brew install libimobiledevice irecovery`
 
