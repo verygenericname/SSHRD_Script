@@ -11,8 +11,12 @@ chmod +x macos/*
 
 img4tool -e -s $3 -m IM4M
 macos/pzb -g BuildManifest.plist $1 1> /dev/null
-macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
-macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
+if [[ "$6" == "" ]]; then
+    macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
+    macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
+fi
+macos/pzb -g Firmware/dfu/iBSS.$6.RELEASE.im4p $1
+macos/pzb -g Firmware/dfu/iBEC.$6.RELEASE.im4p $1
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
 macos/pzb -g Firmware/$(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache $1
 macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:KernelCache:Info:Path") $1
