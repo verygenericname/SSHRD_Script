@@ -19,12 +19,12 @@ chmod +x macos/*
 macos/gaster pwn
 macos/img4tool -e -s $3 -m IM4M
 macos/pzb -g BuildManifest.plist $1
-if [[ "$6" == "" ]]; then
+if [[ "$4" == "" ]]; then
     macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
     macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
 else
-macos/pzb -g Firmware/dfu/iBSS.$6.RELEASE.im4p $1
-macos/pzb -g Firmware/dfu/iBEC.$6.RELEASE.im4p $1
+macos/pzb -g Firmware/dfu/iBSS.$4.RELEASE.im4p $1
+macos/pzb -g Firmware/dfu/iBEC.$4.RELEASE.im4p $1
 fi
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
 macos/pzb -g Firmware/$(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache $1
@@ -32,18 +32,18 @@ if [[ "$2" == "n66m" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 elif [[ "$2" == "n69" ]] || [[ "$2" == "n69u" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone8b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
-elif [[ "$6" == "" ]]; then
+elif [[ "$4" == "" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 else
-macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
+macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 fi
 macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") $1
-if [[ "$6" == "" ]]; then
-    gaster decrypt iBSS.$2.RELEASE.im4p iBSS.dec
-    gaster decrypt iBEC.$2.RELEASE.im4p iBEC.dec
+if [[ "$4" == "" ]]; then
+    macos/gaster decrypt iBSS.$2.RELEASE.im4p iBSS.dec
+    macos/gaster decrypt iBEC.$2.RELEASE.im4p iBEC.dec
 else
-    gaster decrypt iBSS.$6.RELEASE.im4p iBSS.dec
-    gaster decrypt iBEC.$6.RELEASE.im4p iBEC.dec
+    macos/gaster decrypt iBSS.$4.RELEASE.im4p iBSS.dec
+    macos/gaster decrypt iBEC.$4.RELEASE.im4p iBEC.dec
 fi
 macos/iBoot64Patcher iBSS.dec iBSS.patched
 macos/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
@@ -53,10 +53,10 @@ if [[ "$2" == "n66m" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 elif [[ "$2" == "n69" ]] || [[ "$2" == "n69u" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone8b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
-elif [[ "$6" == "" ]]; then
+elif [[ "$4" == "" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 else
-macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
+macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 fi
 macos/Kernel64Patcher kcache.raw kcache.patched -a
 python3 kerneldiff.py kcache.raw kcache.patched
@@ -64,10 +64,10 @@ if [[ "$2" == "n66m" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 elif [[ "$2" == "n69" ]] || [[ "$2" == "n69u" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone8b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
-elif [[ "$6" == "" ]]; then
+elif [[ "$4" == "" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 else
-macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 fi
 macos/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
 macos/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache -o trustcache.img4 -M IM4M -T rtsc
@@ -99,12 +99,12 @@ mv iBEC.img4 sshramdisk
 mv iBSS.img4 sshramdisk
 echo "we are done, please use boot.sh (or bootA10+ for a10 above) to boot your device in the sshramdisk folder"
 echo cleanup...
-if [[ "$6" == "" ]]; then
+if [[ "$4" == "" ]]; then
     rm iBSS.$2.RELEASE.im4p
     rm iBEC.$2.RELEASE.im4p
 else
-    rm iBSS.$6.RELEASE.im4p
-    rm iBEC.$6.RELEASE.im4p
+    rm iBSS.$4.RELEASE.im4p
+    rm iBEC.$4.RELEASE.im4p
 fi
 rm iBSS.dec
 rm iBEC.dec
@@ -114,10 +114,10 @@ if [[ "$2" == "n66m" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 elif [[ "$2" == "n69" ]] || [[ "$2" == "n69u" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone8b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
-elif [[ "$6" == "" ]]; then
+elif [[ "$4" == "" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 else
-rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$6</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
+rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 fi
 rm $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path")
 rm $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache
