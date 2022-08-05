@@ -38,6 +38,8 @@ elif [[ "$2" == "d10" ]] || [[ "$2" == "d11" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone9</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 elif [[ "$2" == "d22" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
+elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
+macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 elif [[ "$4" == "" ]]; then
 macos/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 else
@@ -65,6 +67,8 @@ elif [[ "$2" == "d10" ]] || [[ "$2" == "d11" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone9</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 elif [[ "$2" == "d22" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
+elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
+macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 elif [[ "$4" == "" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
 else
@@ -82,6 +86,8 @@ elif [[ "$2" == "d10" ]] || [[ "$2" == "d11" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone9</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 elif [[ "$2" == "d22" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
+macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 elif [[ "$4" == "" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 else
@@ -138,6 +144,8 @@ elif [[ "$2" == "d10" ]] || [[ "$2" == "d11" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone9</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 elif [[ "$2" == "d22" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
+elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
+rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 elif [[ "$4" == "" ]]; then
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 else
