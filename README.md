@@ -1,5 +1,3 @@
-macOS for now.
+It's done
 
-Stuff soon to come here, not home atm.
-
-Probably garbage
+have fun, i guess
