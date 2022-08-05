@@ -23,7 +23,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 4. libimobiledevice installed on your Mac
     - [brew](https://brew.sh) or [Procursus](https://github.com/ProcursusTeam/Procursus) is required.
     - brew: `brew install libimobiledevice irecovery`
-    - Procursus: `sudo apt install libimobiledevice-utils libirecovery-utils`
+    - Procursus: `sudo apt install libimobiledevice-utils libirecovery-utils usbmuxd-tools`
 
 # Usage
 1. Clone and cd into this repository: `git clone https://github.com/verygenericname/SSHRD_Script && cd SSHRD_Script`
