@@ -9,8 +9,8 @@ chmod +x macos/*
 : ${4?"4th argument: iv and key combined together for the ibss from the ipsw link you provided. You can get them from the iphonewiki"}
 : ${5?"5th argument: iv and key combined together for the ibec from the ipsw link you provided. You can get them from the iphonewiki"}
 
-img4tool -e -s $3 -m IM4M
-macos/pzb -g BuildManifest.plist $1 1> /dev/null
+macos/img4tool -e -s $3 -m IM4M
+macos/pzb -g BuildManifest.plist $1
 if [[ "$6" == "" ]]; then
     macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
     macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
