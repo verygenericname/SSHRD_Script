@@ -14,15 +14,21 @@ macos/pzb -g BuildManifest.plist $1 1> /dev/null
 if [[ "$6" == "" ]]; then
     macos/pzb -g Firmware/dfu/iBSS.$2.RELEASE.im4p $1
     macos/pzb -g Firmware/dfu/iBEC.$2.RELEASE.im4p $1
-fi
+else
 macos/pzb -g Firmware/dfu/iBSS.$6.RELEASE.im4p $1
 macos/pzb -g Firmware/dfu/iBEC.$6.RELEASE.im4p $1
+fi
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
 macos/pzb -g Firmware/$(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache $1
 macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:KernelCache:Info:Path") $1
 macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") $1
-macos/img4 -i iBSS.$2.RELEASE.im4p -o iBSS.dec -k $4
-macos/img4 -i iBEC.$2.RELEASE.im4p -o iBEC.dec -k $5
+if [[ "$6" == "" ]]; then
+    macos/img4 -i iBSS.$2.RELEASE.im4p -o iBSS.dec -k $4
+    macos/img4 -i iBEC.$2.RELEASE.im4p -o iBEC.dec -k $5
+else
+    macos/img4 -i iBSS.$6.RELEASE.im4p -o iBSS.dec -k $4
+    macos/img4 -i iBEC.$6.RELEASE.im4p -o iBEC.dec -k $5
+fi
 macos/iBoot64Patcher iBSS.dec iBSS.patched
 macos/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
 macos/iBoot64Patcher iBEC.dec iBEC.patched -b "rd=md0 -v wdt=-9999999"
@@ -60,8 +66,13 @@ mv iBEC.img4 sshramdisk
 mv iBSS.img4 sshramdisk
 echo "we are done, please use boot.sh to boot your device"
 echo cleanup...
-rm iBSS.$2.RELEASE.im4p
-rm iBEC.$2.RELEASE.im4p
+if [[ "$6" == "" ]]; then
+    rm iBSS.$2.RELEASE.im4p
+    rm iBEC.$2.RELEASE.im4p
+else
+    rm iBSS.$6.RELEASE.im4p
+    rm iBEC.$6.RELEASE.im4p
+fi
 rm iBSS.dec
 rm iBEC.dec
 rm iBSS.patched
