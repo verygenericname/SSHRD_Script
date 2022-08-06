@@ -1,10 +1,10 @@
 #!/bin/bash
 
-
-if [[ "$(uname)" == 'Darwin' ]]; then
 : ${1?"1st argument: ipsw link"}
 : ${2?"2nd argument: board cfg (no AP part, lowercase)"}
 : ${3?"3rd argument: can be any shsh blob, just make sure it's from the same ecid as your phone"}
+
+if [[ "$(uname)" == 'Darwin' ]]; then
 
 set -e
 
@@ -157,10 +157,9 @@ rm IM4M
 rm kc.bpatch
 touch kc.bpatch
 rm ramdisk.dmg
+
+
 elif [[ "$(uname)" == 'Linux' ]]; then
-: ${1?"1st argument: ipsw link"}
-: ${2?"2nd argument: board cfg (no AP part, lowercase)"}
-: ${3?"3rd argument: can be any shsh blob, just make sure it's from the same ecid as your phone"}
 
 set -e
 
