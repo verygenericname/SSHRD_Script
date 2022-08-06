@@ -1,3 +1,7 @@
+<h1 align="center">CURRENTLY WORKING ON FIXING A10 - A11 SUPPORT ON LINUX, DON'T BOTHER ME ABOUT IT.</h1>
+
+
+
 <h1 align="center">SSH Ramdisk Script</h1>
 
 <p align="center">
