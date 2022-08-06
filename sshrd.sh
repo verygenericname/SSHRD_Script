@@ -1,17 +1,15 @@
 #!/bin/bash
 
-
+if [[ "$(uname)" == 'Linux' ]]; then
+   echo "linux support not yet, sorry"
+   exit
+fi
 
 : ${1?"1st argument: ipsw link"}
 : ${2?"2nd argument: board cfg (no AP part, lowercase)"}
 : ${3?"3rd argument: can be any shsh blob, just make sure it's from the same ecid as your phone"}
 
 set -e
-
-if [[ "$(uname)" == 'Linux' ]]; then
-   echo "linux support not yet, sorry"
-   exit
-fi
 
 if [[ -e macos/gaster ]]; then
     echo "gaster downloaded already."
