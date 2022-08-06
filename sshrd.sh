@@ -19,14 +19,6 @@ else
     mv gaster/gaster macos/
     rm -rf gaster gaster-mac.zip
 fi
-if [[ -e macos/ldid ]]; then
-    echo "ldid downloaded already."
-else
-    curl -LO https://nightly.link/ProcursusTeam/ldid/workflows/build/master/ldid_macos_x86_64.zip
-    unzip ldid_macos_x86_64.zip
-    mv ldid macos/
-    rm -rf ldid_macos_x86_64.zip
-fi
 chmod +x macos/*
 macos/gaster pwn
 macos/img4tool -e -s $3 -m IM4M
@@ -117,19 +109,6 @@ macos/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdent
 hdiutil resize -size 120MB ramdisk.dmg
 hdiutil attach -mountpoint /tmp/SSHRD ramdisk.dmg
 macos/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
-macos/ldid -Sdd_ent.xml /tmp/SSHRD/bin/dd
-macos/ldid -Sent.xml /tmp/SSHRD/sbin/mount
-macos/ldid -Sent.xml /tmp/SSHRD/sbin/umount
-macos/ldid -M -Sent.xml /tmp/SSHRD/bin/*
-macos/ldid -M -Sent.xml /tmp/SSHRD/usr/bin/*
-macos/ldid -M -Sent.xml /tmp/SSHRD/usr/sbin/*
-macos/ldid -M -Sent.xml /tmp/SSHRD/usr/local/bin/*
-macos/ldid -M -Sent.xml /tmp/SSHRD/System/Library/Filesystems/apfs.fs/apfs*
-macos/ldid -M -Sent.xml /tmp/SSHRD/System/Library/Filesystems/apfs.fs/mount_apfs
-macos/ldid -M -Sent.xml /tmp/SSHRD/System/Library/Filesystems/apfs.fs/slurpAPFSMeta
-macos/ldid -M -Sent.xml /tmp/SSHRD/System/Library/Filesystems/apfs.fs/newfs_apfs
-macos/ldid -M -Sent.xml /tmp/SSHRD/System/Library/Filesystems/apfs.fs/fsck_apfs
-macos/ldid -M -Sent.xml /tmp/SSHRD/System/Library/Filesystems/apfs.fs/hfs_convert
 hdiutil detach -force /tmp/SSHRD
 hdiutil resize -sectors min ramdisk.dmg
 macos/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
