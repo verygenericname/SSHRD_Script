@@ -260,7 +260,7 @@ linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0
 linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g') -o ramdisk.dmg
 mkdir sshrdtardir
 tar -xvf ssh.tar -C sshrdtardir/
-linux/hfsplus ramdisk.dmg addall sshrdtardir/
+linux/hfsplus ramdisk.dmg addall sshrdtardir/ > /dev/null
 linux/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
 rm -rf sshrdtardir
 mv ramdisk.img4 sshramdisk
