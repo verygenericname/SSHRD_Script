@@ -259,7 +259,7 @@ linux/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
 linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g').trustcache -o trustcache.img4 -M IM4M -T rtsc
 linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g') -o ramdisk.dmg
 mkdir sshrdtardir
-tar -xvf ssh.tar -C sshrdtardir/
+tar -xf ssh.tar -C sshrdtardir/
 linux/hfsplus ramdisk.dmg addall sshrdtardir/ > /dev/null
 linux/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
 rm -rf sshrdtardir
