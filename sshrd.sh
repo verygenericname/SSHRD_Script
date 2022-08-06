@@ -164,7 +164,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
 
 set -e
 
-if [[ -e macos/gaster ]]; then
+if [[ -e linux/gaster ]]; then
     echo "gaster downloaded already."
 else
     curl -LO https://nightly.link/joshuah345/gaster/workflows/makefile/main/gaster-linux.zip
@@ -184,7 +184,7 @@ linux/pzb -g Firmware/dfu/iBSS.$4.RELEASE.im4p $1
 linux/pzb -g Firmware/dfu/iBEC.$4.RELEASE.im4p $1
 fi
 linux/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
-linux/pzb -g Firmware/$(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache $1
+linux/pzb -g Firmware/$(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g').trustcache $1
 if [[ "$2" == "n66m" ]]; then
 linux/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 elif [[ "$2" == "n71m" ]]; then
@@ -204,7 +204,7 @@ linux/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.
 else
 linux/pzb -g $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 fi
-linux/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") $1
+linux/pzb -g $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g') $1
 if [[ "$4" == "" ]]; then
     linux/gaster decrypt iBSS.$2.RELEASE.im4p iBSS.dec
     linux/gaster decrypt iBEC.$2.RELEASE.im4p iBEC.dec
@@ -257,12 +257,12 @@ else
 linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 fi
 linux/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
-linux/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache -o trustcache.img4 -M IM4M -T rtsc
-linux/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") -o ramdisk.dmg
+linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g').trustcache -o trustcache.img4 -M IM4M -T rtsc
+linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g') -o ramdisk.dmg
 mkdir sshrdtardir
 tar -xvf ssh.tar -C sshrdtardir/
 linux/hfsplus ramdisk.dmg addall sshrdtardir/
-macos/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
+linux/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
 rm -rf sshrdtardir
 mv ramdisk.img4 sshramdisk
 mv trustcache.img4 sshramdisk
@@ -302,8 +302,8 @@ rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string
 else
 rm $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
 fi
-rm $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path")
-rm $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache
+rm $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')
+rm $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g').trustcache
 rm BuildManifest.plist
 rm kcache.raw
 rm kcache.patched
