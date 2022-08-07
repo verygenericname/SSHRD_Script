@@ -1,8 +1,7 @@
-<h1 align="center">CURRENTLY WORKING ON FIXING A10 - A11 SUPPORT ON LINUX, DON'T BOTHER ME ABOUT IT.</h1>
-
-
-
 <h1 align="center">SSH Ramdisk Script</h1>
+<p align="center">
+A10-A11 might not boot when created from linux because the kernel is compressed incorrectly.
+</p>
 
 <p align="center">
   <a href="https://github.com/verygenericname/SSHRD_Script/graphs/contributors" target="_blank">
