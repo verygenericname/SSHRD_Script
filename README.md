@@ -48,6 +48,7 @@ Create and boot a SSH ramdisk on checkm8 devices
   /usr/libexec/seputil --load /mnt6/$(cat /mnt6/active)/usr/standalone/firmware/sep-firmware.img4
   
   mount_apfs /dev/disk0s1s2 /mnt2
+    
     - /var is mounted to /mnt2 in the ssh session.
 9. Have fun!
 
