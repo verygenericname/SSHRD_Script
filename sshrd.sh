@@ -237,23 +237,23 @@ fi
 linux/Kernel64Patcher kcache.raw kcache.patched -a
 python3 kerneldiff.py kcache.raw kcache.patched
 if [[ "$2" == "n66m" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$2" == "n71m" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n71</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n71</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$2" == "n69" ]] || [[ "$2" == "n69u" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone8b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone8b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$2" == "d10" ]] || [[ "$2" == "d11" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone9</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone9</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$2" == "d22" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10b</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone10</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$2" == "n61" ]] || [[ "$2" == "n56" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone7</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.iphone7</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 elif [[ "$4" == "" ]]; then
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$2</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 else
-linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
+linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.$4</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch -J
 fi
 linux/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
 linux/img4 -i $(linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g').trustcache -o trustcache.img4 -M IM4M -T rtsc
