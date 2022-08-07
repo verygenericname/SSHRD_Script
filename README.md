@@ -1,7 +1,4 @@
 <h1 align="center">SSH Ramdisk Script</h1>
-<p align="center">
-A10-A11 might not boot when created from linux because the kernel is compressed incorrectly.
-</p>
 
 <p align="center">
   <a href="https://github.com/verygenericname/SSHRD_Script/graphs/contributors" target="_blank">
