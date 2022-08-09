@@ -11,7 +11,7 @@ set -e
 if [[ -e macos/gaster ]]; then
     echo "gaster downloaded already."
 else
-    curl -LO https://nightly.link/joshuah345/gaster/workflows/makefile/main/gaster-mac.zip
+    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-mac.zip
     unzip gaster-mac.zip
     mv gaster/gaster macos/
     rm -rf gaster gaster-mac.zip
@@ -166,7 +166,7 @@ set -e
 if [[ -e linux/gaster ]]; then
     echo "gaster downloaded already."
 else
-    curl -LO https://nightly.link/joshuah345/gaster/workflows/makefile/main/gaster-linux.zip
+    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-linux.zip
     unzip gaster-linux.zip
     mv gaster/gaster linux/
     rm -rf gaster gaster-linux.zip
