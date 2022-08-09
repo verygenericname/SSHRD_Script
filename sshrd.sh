@@ -13,7 +13,7 @@ if [[ -e macos/gaster ]]; then
 else
     curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-mac.zip
     unzip gaster-mac.zip
-    mv gaster/gaster macos/
+    mv gaster macos/
     rm -rf gaster gaster-mac.zip
 fi
 chmod +x macos/*
@@ -168,7 +168,7 @@ if [[ -e linux/gaster ]]; then
 else
     curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-linux.zip
     unzip gaster-linux.zip
-    mv gaster/gaster linux/
+    mv gaster linux/
     rm -rf gaster gaster-linux.zip
 fi
 chmod +x linux/*
