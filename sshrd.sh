@@ -103,9 +103,12 @@ fi
 macos/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
 macos/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache -o trustcache.img4 -M IM4M -T rtsc
 macos/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") -o ramdisk.dmg
-hdiutil resize -size 120MB ramdisk.dmg
+hdiutil resize -size 150MB ramdisk.dmg
 hdiutil attach -mountpoint /tmp/SSHRD ramdisk.dmg
-macos/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
+#macos/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
+tar xf ssh.tar -C /tmp/SSHRD/
+sudo cp ./mount_party.sh /tmp/SSHRD/usr/bin/mount_party
+sudo chmod +x /tmp/SSHRD/usr/bin/mount_party
 hdiutil detach -force /tmp/SSHRD
 hdiutil resize -sectors min ramdisk.dmg
 macos/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
