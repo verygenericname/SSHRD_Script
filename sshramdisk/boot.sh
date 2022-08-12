@@ -1,6 +1,4 @@
-irecovery -f ~/.zshrc
-irecovery -f ~/.zshrc
-irecovery -f ~/.zshrc
+irecovery -f iBSS.img4
 irecovery -f iBSS.img4
 sleep 2
 irecovery -f iBEC.img4
