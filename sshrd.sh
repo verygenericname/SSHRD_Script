@@ -56,9 +56,9 @@ else
     macos/gaster decrypt iBSS.$4.RELEASE.im4p iBSS.dec
     macos/gaster decrypt iBEC.$4.RELEASE.im4p iBEC.dec
 fi
-macos/iBoot64Patcher iBSS.dec iBSS.patched
+macos/iBoot64Patcher iBSS.dec iBSS.patched -n
 macos/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
-macos/iBoot64Patcher iBEC.dec iBEC.patched -b "rd=md0 -v wdt=-9999999"
+macos/iBoot64Patcher iBEC.dec iBEC.patched -n -b "rd=md0 -v wdt=-9999999"
 macos/img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec
 if [[ "$2" == "n66m" ]]; then
 macos/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
@@ -211,9 +211,9 @@ else
     linux/gaster decrypt iBSS.$4.RELEASE.im4p iBSS.dec
     linux/gaster decrypt iBEC.$4.RELEASE.im4p iBEC.dec
 fi
-linux/iBoot64Patcher iBSS.dec iBSS.patched
+linux/iBoot64Patcher iBSS.dec iBSS.patched -n
 linux/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
-linux/iBoot64Patcher iBEC.dec iBEC.patched -b "rd=md0 -v wdt=-9999999"
+linux/iBoot64Patcher iBEC.dec iBEC.patched -n -b "rd=md0 -v wdt=-9999999"
 linux/img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec
 if [[ "$2" == "n66m" ]]; then
 linux/img4 -i $(cat BuildManifest.plist | grep -A2  "<string>kernelcache.release.n66</string>" | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o kcache.raw
