@@ -109,6 +109,7 @@ macos/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
 hdiutil detach -force /tmp/SSHRD
 hdiutil resize -sectors min ramdisk.dmg
 macos/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
+mkdir sshramdisk
 mv ramdisk.img4 sshramdisk
 mv trustcache.img4 sshramdisk
 mv devicetree.img4 sshramdisk
@@ -263,6 +264,7 @@ tar -xf ssh.tar -C sshrdtardir/
 linux/hfsplus ramdisk.dmg addall sshrdtardir/ > /dev/null
 linux/img4 -i ramdisk.dmg -o ramdisk.img4 -M IM4M -A -T rdsk
 rm -rf sshrdtardir
+mkdir sshramdisk
 mv ramdisk.img4 sshramdisk
 mv trustcache.img4 sshramdisk
 mv devicetree.img4 sshramdisk
