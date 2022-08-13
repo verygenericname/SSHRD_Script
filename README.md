@@ -58,4 +58,5 @@ Create and boot a SSH ramdisk on checkm8 devices
 You can also set your nonce/reset a iphone on ios 9+ with this
 
 set nonce: `./boot(A10+).sh set-nonce <generatorhere>`
+
 reset `./boot(A10+).sh reset`
