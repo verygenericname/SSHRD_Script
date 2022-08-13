@@ -8,6 +8,7 @@ sleep 2
 irecovery -c "setenv oblit-inprogress 5"
 irecovery -c saveenv
 irecovery -c reset
+exit
 fi
 
 irecovery -f iBSS.img4
