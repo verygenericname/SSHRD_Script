@@ -56,7 +56,7 @@ else
     macos/gaster decrypt iBSS.$4.RELEASE.im4p iBSS.dec
     macos/gaster decrypt iBEC.$4.RELEASE.im4p iBEC.dec
 fi
-macos/iBoot64Patcher iBSS.dec iBSS.patched -n
+macos/iBoot64Patcher iBSS.dec iBSS.patched
 macos/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
 macos/iBoot64Patcher iBEC.dec iBEC.patched -n -b "rd=md0 -v wdt=-9999999"
 macos/img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec
@@ -211,7 +211,7 @@ else
     linux/gaster decrypt iBSS.$4.RELEASE.im4p iBSS.dec
     linux/gaster decrypt iBEC.$4.RELEASE.im4p iBEC.dec
 fi
-linux/iBoot64Patcher iBSS.dec iBSS.patched -n
+linux/iBoot64Patcher iBSS.dec iBSS.patched
 linux/img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss
 linux/iBoot64Patcher iBEC.dec iBEC.patched -n -b "rd=md0 -v wdt=-9999999"
 linux/img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec
