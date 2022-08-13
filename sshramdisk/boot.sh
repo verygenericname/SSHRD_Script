@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [[ "$1" == 'reset' ]]; then
 irecovery -f iBSS.img4
 irecovery -f iBSS.img4
