@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 : ${1?"1st argument: ipsw link"}
 : ${2?"2nd argument: board cfg (no AP part, lowercase)"}
