@@ -216,7 +216,7 @@ mv devicetree.img4 sshramdisk
 mv kernelcache.img4 sshramdisk
 mv iBEC.img4 sshramdisk
 mv iBSS.img4 sshramdisk
-echo "we are done, please use boot.sh (or bootA10+.sh for a10 above) to boot your device in the sshramdisk folder"
+echo "we are done, please use ./sshrd.sh boot to boot your device (or bootA10+ for a10+)"
 echo cleanup...
 if [[ "$4" == "" ]]; then
     rm iBSS.$2.RELEASE.im4p
@@ -370,7 +370,7 @@ mv devicetree.img4 sshramdisk
 mv kernelcache.img4 sshramdisk
 mv iBEC.img4 sshramdisk
 mv iBSS.img4 sshramdisk
-echo "we are done, please use boot.sh (or bootA10+.sh for a10 above) to boot your device in the sshramdisk folder"
+echo "we are done, please use ./sshrd.sh boot to boot your device (or bootA10+ for a10+)"
 echo cleanup...
 if [[ "$4" == "" ]]; then
     rm iBSS.$2.RELEASE.im4p
