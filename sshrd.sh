@@ -116,7 +116,7 @@ if [[ "$(uname)" == 'Darwin' ]]; then
 set -e
 
 if [[ -e macos/gaster ]]; then
-    echo "gaster downloaded already."
+    :
 else
     curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-mac.zip
     unzip gaster-mac.zip
@@ -271,7 +271,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
 set -e
 
 if [[ -e linux/gaster ]]; then
-    echo "gaster downloaded already."
+    :
 else
     curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-linux.zip
     unzip gaster-linux.zip
