@@ -33,7 +33,7 @@ Create and boot a SSH ramdisk on checkm8 devices
     - A11 users, go to recovery first, then DFU.
 4. Run `./sshrd.sh boot` to boot the ramdisk
     - A10+ users, use `./sshrd.sh bootA10+` instead.
-5. To ssh into the device, open up another terminal window and run `sudo iproxy 2222 44`.
+5. To ssh into the device, open up another terminal window and run `sudo iproxy 2222 22`.
 6. In the first terminal window, run `ssh -p2222 root@localhost`
 7. Finally, to mount the filesystems, run these commands (might vary depending on device)
 8. 
