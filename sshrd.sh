@@ -13,6 +13,9 @@ set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
+if [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8010' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8015' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8011' ]]; then
+irecovery -c go
+fi
 sleep 2
 irecovery -c "setenv oblit-inprogress 5"
 irecovery -c saveenv
@@ -29,6 +32,9 @@ set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
+if [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8010' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8015' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8011' ]]; then
+irecovery -c go
+fi
 sleep 2
 irecovery -c "setenv com.apple.System.boot-nonce $3"
 irecovery -c saveenv
@@ -42,59 +48,10 @@ set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-sleep 2
-irecovery -f sshramdisk/ramdisk.img4
-irecovery -c ramdisk
-irecovery -f sshramdisk/devicetree.img4
-irecovery -c devicetree
-irecovery -f sshramdisk/trustcache.img4
-irecovery -c firmware
-irecovery -f sshramdisk/kernelcache.img4
-irecovery -c bootx
-echo "device should show text on screen now."
-exit
-fi
-
-if [[ "$1" == 'bootA10+' ]]; then
-if [[ "$2" == 'reset' ]]; then
-irecovery -f sshramdisk/iBSS.img4
-set -e
-irecovery -f sshramdisk/iBSS.img4
-sleep 2
-irecovery -f sshramdisk/iBEC.img4
+if [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8010' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8015' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8011' ]]; then
 irecovery -c go
-sleep 4
-irecovery -c "setenv oblit-inprogress 5"
-irecovery -c saveenv
-irecovery -c reset
-echo "device should now show a progress bar when booting and then go to setup screen"
-exit
 fi
-
-if [[ "$2" == 'set-nonce' ]]; then
-: ${3?"3rd argument: generator here"}
-
-irecovery -f sshramdisk/iBSS.img4
-set -e
-irecovery -f sshramdisk/iBSS.img4
 sleep 2
-irecovery -f sshramdisk/iBEC.img4
-irecovery -c go
-sleep 4
-irecovery -c "setenv com.apple.System.boot-nonce $3"
-irecovery -c saveenv
-irecovery -c reset
-echo "nonce set to $3 successfully"
-exit
-fi
-
-irecovery -f sshramdisk/iBSS.img4
-set -e
-irecovery -f sshramdisk/iBSS.img4
-sleep 2
-irecovery -f sshramdisk/iBEC.img4
-irecovery -c go
-sleep 4
 irecovery -f sshramdisk/ramdisk.img4
 irecovery -c ramdisk
 irecovery -f sshramdisk/devicetree.img4
