@@ -18,7 +18,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 # Prerequsites
 1. A computer running macOS/linux
 2. A checkm8 device (A7-A11)
-3. iOS 12-14 IPSW link
+3. iOS 12-15 IPSW link
 4. libimobiledevice installed on your Mac/Linux
     - [brew](https://brew.sh) or [Procursus](https://github.com/ProcursusTeam/Procursus) is required.
     - brew: `brew install libimobiledevice libirecovery`
