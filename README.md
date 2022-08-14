@@ -36,17 +36,12 @@ Create and boot a SSH ramdisk on checkm8 devices
 6. In the first terminal window, run `ssh -p2222 root@localhost`
 7. Finally, to mount the filesystems, run these commands (might vary depending on device)
 8. 
-  mount_apfs /dev/disk0s1s1 /mnt1
-  
+  `mount_apfs /dev/disk0s1s1 /mnt1
   mount_apfs -R /dev/disk0s1s6 /mnt6
-  
   mount_apfs -R /dev/disk0s1s3 /mnt7
-  
   /usr/libexec/seputil --gigalocker-init
-  
   /usr/libexec/seputil --load /mnt6/$(cat /mnt6/active)/usr/standalone/firmware/sep-firmware.img4
-  
-  mount_apfs /dev/disk0s1s2 /mnt2 
+  mount_apfs /dev/disk0s1s2 /mnt2`
     
   - /var is mounted to /mnt2 in the ssh session.
 9. Have fun!
