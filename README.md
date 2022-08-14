@@ -31,8 +31,8 @@ Create and boot a SSH ramdisk on checkm8 devices
 2. Run `./sshrd.sh <link to your ipsw> <your board config (NO ap part and lower)> <any shsh blob here>`, **without** the `<>`.
 3. Place your device into DFU mode
     - A11 users, go to recovery first, then DFU.
-4. Run `cd sshramdisk`, then `./boot.sh` to boot the ramdisk
-    - A10+ users, use `./bootA10+.sh` instead.
+4. Run `./sshrd.sh boot` to boot the ramdisk
+    - A10+ users, use `./sshrd.sh bootA10+` instead.
 5. To ssh into the device, open up another terminal window and run `sudo iproxy 2222 44`.
 6. In the first terminal window, run `ssh -p2222 root@localhost`
 7. Finally, to mount the filesystems, run these commands (might vary depending on device)
@@ -57,6 +57,6 @@ Create and boot a SSH ramdisk on checkm8 devices
 
 You can also set your nonce/reset a iphone on ios 9+ with this
 
-set nonce: `./boot(A10+).sh set-nonce <generatorhere>`
+set nonce: `./sshrd.sh boot(A10+) set-nonce <generatorhere>`
 
-reset: `./boot(A10+).sh reset`
+reset: `./sshrd.sh boot(A10+) reset`
