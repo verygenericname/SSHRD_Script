@@ -7,13 +7,14 @@ mkdir sshramdisk
 fi
 
 if [[ "$1" == 'reset' ]]; then
+check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 irecovery -f sshramdisk/iBSS.img4
 set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-if [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8010' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8015' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8011' ]]; then
+if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]]; then
 irecovery -c go
 fi
 sleep 2
@@ -26,31 +27,33 @@ fi
 
 if [[ "$1" == 'set-nonce' ]]; then
 : ${2?"2rd argument: generator here"}
+check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 irecovery -f sshramdisk/iBSS.img4
 set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-if [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8010' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8015' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8011' ]]; then
+if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]]; then
 irecovery -c go
 fi
 sleep 2
-irecovery -c "setenv com.apple.System.boot-nonce $3"
+irecovery -c "setenv com.apple.System.boot-nonce $2"
 irecovery -c saveenv
 irecovery -c reset
-echo "nonce set to $3 successfully"
+echo "nonce set to $2 successfully"
 exit
 fi
 
 if [[ "$1" == 'boot' ]]; then
+check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 irecovery -f sshramdisk/iBSS.img4
 set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-if [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8010' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8015' ]] || [[ "$(irecovery -q | grep CPID | sed 's/CPID: //')" == '0x8011' ]]; then
+if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]]; then
 irecovery -c go
 fi
 sleep 2
