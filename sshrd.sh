@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ -e sshramdisk ]]; then
+ :
+else
+mkdir sshramdisk
+fi
+
 if [[ "$1" == 'boot' ]]; then
 if [[ "$2" == 'reset' ]]; then
 irecovery -f sshramdisk/iBSS.img4
