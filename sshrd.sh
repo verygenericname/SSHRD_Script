@@ -6,8 +6,8 @@ else
 mkdir sshramdisk
 fi
 
-if [[ "$1" == 'boot' ]]; then
-if [[ "$2" == 'reset' ]]; then
+if [[ "$1" == 'reset' ]]; then
+
 irecovery -f sshramdisk/iBSS.img4
 set -e
 irecovery -f sshramdisk/iBSS.img4
@@ -24,8 +24,8 @@ echo "device should now show a progress bar when booting and then go to setup sc
 exit
 fi
 
-if [[ "$2" == 'set-nonce' ]]; then
-: ${3?"3rd argument: generator here"}
+if [[ "$1" == 'set-nonce' ]]; then
+: ${2?"2rd argument: generator here"}
 
 irecovery -f sshramdisk/iBSS.img4
 set -e
@@ -42,6 +42,8 @@ irecovery -c reset
 echo "nonce set to $3 successfully"
 exit
 fi
+
+if [[ "$1" == 'boot' ]]; then
 
 irecovery -f sshramdisk/iBSS.img4
 set -e
@@ -179,7 +181,7 @@ mv devicetree.img4 sshramdisk/
 mv kernelcache.img4 sshramdisk/
 mv iBEC.img4 sshramdisk/
 mv iBSS.img4 sshramdisk/
-echo "we are done, please use ./sshrd.sh boot to boot your device (or bootA10+ for a10+)"
+echo "we are done, please use ./sshrd.sh boot to boot your device"
 echo cleanup...
 if [[ "$4" == "" ]]; then
     rm iBSS.$2.RELEASE.im4p
@@ -333,7 +335,7 @@ mv devicetree.img4 sshramdisk/
 mv kernelcache.img4 sshramdisk/
 mv iBEC.img4 sshramdisk/
 mv iBSS.img4 sshramdisk/
-echo "we are done, please use ./sshrd.sh boot to boot your device (or bootA10+ for a10+)"
+echo "we are done, please use ./sshrd.sh boot to boot your device"
 echo cleanup...
 if [[ "$4" == "" ]]; then
     rm iBSS.$2.RELEASE.im4p
