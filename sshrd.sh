@@ -135,7 +135,7 @@ macos/pzb -g Firmware/dfu/iBSS.$4.RELEASE.im4p $1
 macos/pzb -g Firmware/dfu/iBEC.$4.RELEASE.im4p $1
 fi
 macos/pzb -g Firmware/all_flash/DeviceTree.$2ap.im4p $1
-macos/pzb -g Firmware/$(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache $1
+macos/pzb -g Firmware/$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1).trustcache $1
 if [[ "$2" == "n66m" ]]; then
 macos/pzb -g kernelcache.release.n66 $1
 elif [[ "$2" == "n71m" ]]; then
@@ -155,7 +155,7 @@ macos/pzb -g kernelcache.release.$2 $1
 else
 macos/pzb -g kernelcache.release.$4 $1
 fi
-macos/pzb -g $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") $1
+macos/pzb -g $(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 if [[ "$4" == "" ]]; then
     macos/gaster decrypt iBSS.$2.RELEASE.im4p iBSS.dec
     macos/gaster decrypt iBEC.$2.RELEASE.im4p iBEC.dec
@@ -208,8 +208,8 @@ else
 macos/img4 -i kernelcache.release.$4 -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch
 fi
 macos/img4 -i DeviceTree.$2ap.im4p -o devicetree.img4 -M IM4M -T rdtr
-macos/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache -o trustcache.img4 -M IM4M -T rtsc
-macos/img4 -i $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path") -o ramdisk.dmg
+macos/img4 -i $(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1).trustcache -o trustcache.img4 -M IM4M -T rtsc
+macos/img4 -i $(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o ramdisk.dmg
 hdiutil resize -size 150MB ramdisk.dmg
 hdiutil attach -mountpoint /tmp/SSHRD ramdisk.dmg
 macos/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
@@ -254,8 +254,8 @@ rm kernelcache.release.$2
 else
 rm kernelcache.release.$4
 fi
-rm $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path")
-rm $(/usr/libexec/PlistBuddy BuildManifest.plist -c "print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path").trustcache
+rm $(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)
+rm $(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1).trustcache
 rm BuildManifest.plist
 rm kcache.raw
 rm kcache.patched
