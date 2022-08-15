@@ -5,7 +5,7 @@ import sys
 
 if __name__ == "__main__":
 	args = sys.argv
-	if len(args) < 3:
+	if len(args) < 4:
 		print("Usage: kernelcache_raw kernelcache_patched kc.bpatch")
 		sys.exit(0)
 	patched = args[2]
