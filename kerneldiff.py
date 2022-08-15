@@ -6,7 +6,7 @@ import sys
 if __name__ == "__main__":
 	args = sys.argv
 	if len(args) < 3:
-		print("Usage: kernelcache_raw kernelcache_patched")
+		print("Usage: kernelcache_raw kernelcache_patched kc.bpatch")
 		sys.exit(0)
 	patched = args[2]
 	original = args[1]
@@ -23,7 +23,7 @@ if __name__ == "__main__":
 		patchedByte = p[i]
 		if originalByte != patchedByte:
 			diff.append([hex(i),hex(originalByte), hex(patchedByte)])	
-	diffFile = open('kc.bpatch', 'w+')
+	diffFile = open(args[3], 'w+')
 	diffFile.write('#AMFI\n\n')
 	for d in diff:
 		data = str(d[0]) + " " + (str(d[1])) + " " + (str(d[2]))
