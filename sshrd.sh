@@ -9,6 +9,14 @@ mkdir sshramdisk
 fi
 
 if [[ "$1" == 'reset' ]]; then
+
+if [[ -e sshramdisk/iBSS.img4 ]] && [[ -e sshramdisk/iBEC.img4 ]]; then
+    :
+else
+echo "please make a ssh ramdisk first!"
+exit
+fi
+
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 irecovery -f sshramdisk/iBSS.img4
@@ -29,6 +37,14 @@ fi
 
 if [[ "$1" == 'set-nonce' ]]; then
 : ${2?"2rd argument: generator here"}
+
+if [[ -e sshramdisk/iBSS.img4 ]] && [[ -e sshramdisk/iBEC.img4 ]]; then
+    :
+else
+echo "please make a ssh ramdisk first!"
+exit
+fi
+
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 irecovery -f sshramdisk/iBSS.img4
@@ -48,6 +64,14 @@ exit
 fi
 
 if [[ "$1" == 'boot' ]]; then
+
+if [[ -e sshramdisk/iBSS.img4 ]] && [[ -e sshramdisk/iBEC.img4 ]]; then
+    :
+else
+echo "please make a ssh ramdisk first!"
+exit
+fi
+
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 irecovery -f sshramdisk/iBSS.img4
