@@ -207,7 +207,6 @@ mkdir sshrdtardir
 tar -xf ssh.tar -C sshrdtardir/
 $oscheck/hfsplus work/ramdisk.dmg addall sshrdtardir/ > /dev/null
 rm -rf sshrdtardir
-$oscheck/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 fi
 $oscheck/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 echo "we are done, please use ./sshrd.sh boot to boot your device"
