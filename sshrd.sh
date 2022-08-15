@@ -80,10 +80,10 @@ set -e
 if [[ -e macos/gaster ]]; then
     :
 else
-    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-mac.zip
-    unzip gaster-mac.zip
+    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-Darwin.zip
+    unzip gaster-Darwin.zip
     mv gaster macos/
-    rm -rf gaster gaster-mac.zip
+    rm -rf gaster gaster-Darwin.zip
 fi
 
 if [[ -e work ]]; then
@@ -201,10 +201,10 @@ set -e
 if [[ -e linux/gaster ]]; then
     :
 else
-    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-linux.zip
-    unzip gaster-linux.zip
+    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-Linux.zip
+    unzip gaster-Linux.zip
     mv gaster linux/
-    rm -rf gaster gaster-linux.zip
+    rm -rf gaster gaster-Linux.zip
 fi
 
 if [[ -e work ]]; then
