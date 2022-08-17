@@ -35,7 +35,6 @@ Create and boot a SSH ramdisk on checkm8 devices
 5. To ssh into the device, open up another terminal window and run `sudo iproxy 2222 22`.
 6. In the first terminal window, run `ssh -p2222 root@localhost`
 7. Finally, to mount the filesystems, run these commands (might vary depending on device)
-8. 
   - `mount_apfs /dev/disk0s1s1 /mnt1`
   - `mount_apfs -R /dev/disk0s1s6 /mnt6`
   - `mount_apfs -R /dev/disk0s1s3 /mnt7`
