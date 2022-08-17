@@ -24,7 +24,7 @@ set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]]; then
+if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]] || [[ "$check" == '0x8012' ]]; then
 irecovery -c go
 fi
 sleep 2
@@ -52,7 +52,7 @@ set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]]; then
+if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]] || [[ "$check" == '0x8012' ]]; then
 irecovery -c go
 fi
 sleep 2
@@ -79,7 +79,7 @@ set -e
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
-if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]]; then
+if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]] || [[ "$check" == '0x8012' ]]; then
 irecovery -c go
 fi
 sleep 2
