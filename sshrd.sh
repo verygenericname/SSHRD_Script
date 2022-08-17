@@ -150,6 +150,10 @@ elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
 ../$oscheck/pzb -gkernelcache.release.iphone10 $1
 elif [[ "$2" == "n61" ]] || [[ "$2" == "n56" ]]; then
 ../$oscheck/pzb -g kernelcache.release.iphone7 $1
+elif [[ "$2" == "j132" ]] || [[ "$2" == "j140a" ]] || [[ "$2" == "j140k" ]] || [[ "$2" == "j152f" ]] || [[ "$2" == "j213" ]] || [[ "$2" == "j214k" ]] || [[ "$2" == "j215" ]] || [[ "$2" == "j223" ]] || [[ "$2" == "j230k" ]] || [[ "$2" == "j680" ]] || [[ "$2" == "j780" ]]; then
+../$oscheck/pzb -g kernelcache.release.ibridge2p $1
+elif [[ "$2" == "j137" ]] || [[ "$2" == "j160" ]] || [[ "$2" == "j174" ]] || [[ "$2" == "j185" ]] || [[ "$2" == "j185f" ]]; then
+../$oscheck/pzb -g kernelcache.release.ibridge2d $1
 elif [[ "$4" == "" ]]; then
 ../$oscheck/pzb -g kernelcache.release.$2 $1
 else
@@ -186,6 +190,10 @@ elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
 $oscheck/img4 -i work/kernelcache.release.iphone10 -o work/kcache.raw
 elif [[ "$2" == "n61" ]] || [[ "$2" == "n56" ]]; then
 $oscheck/img4 -i work/kernelcache.release.iphone7 -o work/kcache.raw
+elif [[ "$2" == "j132" ]] || [[ "$2" == "j140a" ]] || [[ "$2" == "j140k" ]] || [[ "$2" == "j152f" ]] || [[ "$2" == "j213" ]] || [[ "$2" == "j214k" ]] || [[ "$2" == "j215" ]] || [[ "$2" == "j223" ]] || [[ "$2" == "j230k" ]] || [[ "$2" == "j680" ]] || [[ "$2" == "j780" ]]; then
+$oscheck/img4 -i work/kernelcache.release.ibridge2p -o work/kcache.raw
+elif [[ "$2" == "j137" ]] || [[ "$2" == "j160" ]] || [[ "$2" == "j174" ]] || [[ "$2" == "j185" ]] || [[ "$2" == "j185f" ]]; then
+$oscheck/img4 -i work/kernelcache.release.ibridge2d -o work/kcache.raw
 elif [[ "$4" == "" ]]; then
 $oscheck/img4 -i work/kernelcache.release.$2 -o work/kcache.raw
 else
@@ -207,6 +215,10 @@ elif [[ "$2" == "d20" ]] || [[ "$2" == "d21" ]]; then
 $oscheck/img4 -i work/kernelcache.release.iphone10 -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
 elif [[ "$2" == "n61" ]] || [[ "$2" == "n56" ]]; then
 $oscheck/img4 -i work/kernelcache.release.iphone7 -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
+elif [[ "$2" == "j132" ]] || [[ "$2" == "j140a" ]] || [[ "$2" == "j140k" ]] || [[ "$2" == "j152f" ]] || [[ "$2" == "j213" ]] || [[ "$2" == "j214k" ]] || [[ "$2" == "j215" ]] || [[ "$2" == "j223" ]] || [[ "$2" == "j230k" ]] || [[ "$2" == "j680" ]] || [[ "$2" == "j780" ]]; then
+$oscheck/img4 -i work/kernelcache.release.ibridge2p -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
+elif [[ "$2" == "j137" ]] || [[ "$2" == "j160" ]] || [[ "$2" == "j174" ]] || [[ "$2" == "j185" ]] || [[ "$2" == "j185f" ]]; then
+$oscheck/img4 -i work/kernelcache.release.ibridge2d -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
 elif [[ "$4" == "" ]]; then
 $oscheck/img4 -i work/kernelcache.release.$2 -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
 else
