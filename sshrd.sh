@@ -2,6 +2,12 @@
 
 oscheck=$(uname)
 
+if [[ -e work ]]; then
+ rm -rf work
+else
+ :
+fi
+
 if [[ -e sshramdisk ]]; then
  :
 else
