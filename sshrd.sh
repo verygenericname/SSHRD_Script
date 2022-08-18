@@ -102,7 +102,7 @@ exit
 fi
 
 : ${1?"1st argument: ipsw link"}
-: ${2?"2nd argument: board cfg (no AP part, lowercase)"}
+: ${2?"2nd argument: board cfg"}
 : ${3?"3rd argument: can be any shsh blob, just make sure it's from the same ecid as your phone"}
 
 replace=$(echo $2 | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
