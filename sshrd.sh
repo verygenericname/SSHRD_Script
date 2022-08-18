@@ -245,7 +245,7 @@ $oscheck/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
 hdiutil detach -force /tmp/SSHRD
 hdiutil resize -sectors min work/ramdisk.dmg
 else
-$oscheck/hfsplus work/ramdisk.dmg resize 150000000
+$oscheck/hfsplus work/ramdisk.dmg resize 150000000 > /dev/null
 $oscheck/hfsplus work/ramdisk.dmg untar ssh.tar > /dev/null
 fi
 $oscheck/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
