@@ -182,7 +182,7 @@ else
 fi
 $oscheck/iBoot64Patcher work/iBSS.dec work/iBSS.patched
 $oscheck/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
-$oscheck/iBoot64Patcher work/iBEC.dec work/iBEC.patched -n -b "rd=md0 -v wdt=-9999999"
+$oscheck/iBoot64Patcher work/iBEC.dec work/iBEC.patched -n -b "rd=md0 debug=0x2014e -v wdt=-9999999"
 $oscheck/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
 if [[ "$replace" == "n66m" ]]; then
 $oscheck/img4 -i work/kernelcache.release.n66 -o work/kcache.raw
