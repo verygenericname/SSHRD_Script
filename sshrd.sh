@@ -9,6 +9,7 @@ while !(system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device"
 done
 else
 while !(lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" 2> /dev/null); do
+    echo "waiting for dfu mode"
     sleep 1
 done
 fi 
