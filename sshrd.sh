@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
 oscheck=$(uname)
+check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
 if [[ -e work ]]; then
  rm -rf work
@@ -23,9 +25,6 @@ echo "please make a ssh ramdisk first!"
 exit
 fi
 
-check=$(irecovery -q | grep CPID | sed 's/CPID: //')
-
-set -e
 $oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
@@ -55,9 +54,6 @@ echo "please make a ssh ramdisk first!"
 exit
 fi
 
-check=$(irecovery -q | grep CPID | sed 's/CPID: //')
-
-set -e
 $oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
@@ -82,9 +78,6 @@ echo "please make a ssh ramdisk first!"
 exit 1
 fi
 
-check=$(irecovery -q | grep CPID | sed 's/CPID: //')
-
-set -e
 $oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
@@ -105,14 +98,12 @@ echo "device should show text on screen now."
 exit
 fi
 
-if [[ -z $1 || -z $2 || -z $3 ]]; then
-    echo -e "1st argument: IPSW Link\n2nd argument: Board Config\n3rd argument: SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify."
+if [[ -z $1 || -z $2 ]]; then
+    echo -e "1st argument: IPSW Link\n2nd argument: Board Config\n3rd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify."
     exit 1
 fi
 
 replace=$(echo $2 | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
-
-set -e
 
 if [[ -e $oscheck/gaster ]]; then
     :
@@ -133,7 +124,11 @@ trap "rm -rf work" INT ERR
 
 chmod +x $oscheck/*
 $oscheck/gaster pwn
+if [[ "$3" == "" ]]; then
+$oscheck/img4tool -e -s shsh/${check}.shsh -m work/IM4M
+else
 $oscheck/img4tool -e -s "$3" -m work/IM4M
+fi
 cd work
 ../$oscheck/pzb -g BuildManifest.plist $1
 if [[ "$4" == "" ]]; then
