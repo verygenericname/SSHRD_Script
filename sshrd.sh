@@ -3,12 +3,12 @@
 set -e
 oscheck=$(uname)
 if [[ "$oscheck" == 'Darwin' ]]; then
-while !(system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" 2> /dev/null); do
+while !(system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
      echo "waiting for dfu mode"
      sleep 1
 done
 else
-while !(lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" 2> /dev/null); do
+while !(lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" >> /dev/null); do
     echo "waiting for dfu mode"
     sleep 1
 done
