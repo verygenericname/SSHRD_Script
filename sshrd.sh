@@ -25,8 +25,8 @@ fi
 
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
-irecovery -f sshramdisk/iBSS.img4
 set -e
+$oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
@@ -57,8 +57,8 @@ fi
 
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
-irecovery -f sshramdisk/iBSS.img4
 set -e
+$oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
@@ -84,8 +84,8 @@ fi
 
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 
-irecovery -f sshramdisk/iBSS.img4
 set -e
+$oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
 irecovery -f sshramdisk/iBEC.img4
