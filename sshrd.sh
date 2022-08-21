@@ -128,7 +128,7 @@ trap "rm -rf work" INT ERR
 
 chmod +x $oscheck/*
 $oscheck/gaster pwn
-$oscheck/img4tool -e -s $3 -m work/IM4M
+$oscheck/img4tool -e -s "$3" -m work/IM4M
 cd work
 ../$oscheck/pzb -g BuildManifest.plist $1
 if [[ "$4" == "" ]]; then
