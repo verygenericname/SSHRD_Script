@@ -29,7 +29,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 1. Clone and cd into this repository: `git clone https://github.com/verygenericname/SSHRD_Script && cd SSHRD_Script`
     - If you have cloned this before, run `cd SSHRD_Script && git pull` to pull new changes
 2. Run `./sshrd.sh <link to your ipsw> <your board config>`, **without** the `<>`.
-  - you can put your own shsh for the third argument, although optional
+    - you can put your own shsh for the third argument, although optional
 3. Place your device into DFU mode
     - A11 users, go to recovery first, then DFU.
 4. Run `./sshrd.sh boot` to boot the ramdisk
