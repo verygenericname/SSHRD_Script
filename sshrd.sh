@@ -3,6 +3,7 @@
 set -e
 oscheck=$(uname)
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
+replace=$(irecovery -q | grep MODEL | sed 's/MODEL: //' | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
 
 if [[ -e work ]]; then
  rm -rf work
@@ -98,12 +99,10 @@ echo "device should show text on screen now."
 exit
 fi
 
-if [[ -z $1 || -z $2 ]]; then
-    echo -e "1st argument: IPSW Link\n2nd argument: Board Config\n3rd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify."
+if [[ -z $1 ]]; then
+    echo -e "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify."
     exit 1
 fi
-
-replace=$(echo $2 | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
 
 if [[ -e $oscheck/gaster ]]; then
     :
@@ -124,7 +123,7 @@ trap "rm -rf work" INT ERR
 
 chmod +x $oscheck/*
 $oscheck/gaster pwn
-if [[ "$3" == "" ]]; then
+if [[ "$2" == "" ]]; then
 $oscheck/img4tool -e -s shsh/${check}.shsh -m work/IM4M
 else
 $oscheck/img4tool -e -s "$3" -m work/IM4M
