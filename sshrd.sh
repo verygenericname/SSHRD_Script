@@ -2,6 +2,16 @@
 
 set -e
 oscheck=$(uname)
+if [[ "$oscheck" == 'Darwin' ]]; then
+while !(system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" 2> /dev/null); do
+     echo "waiting for dfu mode"
+     sleep 1
+done
+else
+while !(lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" 2> /dev/null); do
+    sleep 1
+done
+fi 
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
 replace=$(irecovery -q | grep MODEL | sed 's/MODEL: //' | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
 
