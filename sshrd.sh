@@ -37,6 +37,7 @@ echo "please make a ssh ramdisk first!"
 exit
 fi
 
+$oscheck/gaster pwn > /dev/null
 $oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
@@ -66,6 +67,7 @@ echo "please make a ssh ramdisk first!"
 exit
 fi
 
+$oscheck/gaster pwn > /dev/null
 $oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
@@ -90,6 +92,7 @@ echo "please make a ssh ramdisk first!"
 exit 1
 fi
 
+$oscheck/gaster pwn > /dev/null
 $oscheck/gaster reset > /dev/null
 irecovery -f sshramdisk/iBSS.img4
 sleep 2
