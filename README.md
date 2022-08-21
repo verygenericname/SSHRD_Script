@@ -22,7 +22,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 4. libimobiledevice installed on your Mac/Linux
     - [brew](https://brew.sh) or [Procursus](https://github.com/ProcursusTeam/Procursus) is required.
     - brew: `brew install libimobiledevice libirecovery`
-    - Procursus: `sudo apt install libimobiledevice-utils libirecovery-utils`
+    - Procursus: `sudo apt install libimobiledevice-utils libirecovery-utils libusbmuxd-tools`
     - Linux: `sudo apt install libimobiledevice-utils irecovery libusbmuxd-tools`
 
 # Usage
