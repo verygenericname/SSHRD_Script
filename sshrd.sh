@@ -42,7 +42,11 @@ exit
 fi
 
 if [[ "$1" == 'set-nonce' ]]; then
-: ${2?"2rd argument: generator here"}
+
+if [[ -z $2 ]]; then
+echo "2nd argument: generator here"
+exit 1
+fi
 
 if [[ -e sshramdisk/iBSS.img4 ]] && [[ -e sshramdisk/iBEC.img4 ]]; then
     :
@@ -75,7 +79,7 @@ if [[ -e sshramdisk/iBSS.img4 ]] && [[ -e sshramdisk/iBEC.img4 ]]; then
     :
 else
 echo "please make a ssh ramdisk first!"
-exit
+exit 1
 fi
 
 check=$(irecovery -q | grep CPID | sed 's/CPID: //')
@@ -101,9 +105,10 @@ echo "device should show text on screen now."
 exit
 fi
 
-: ${1?"1st argument: ipsw link"}
-: ${2?"2nd argument: board cfg"}
-: ${3?"3rd argument: can be any shsh blob, just make sure it's from the same ecid as your phone"}
+if [[ -z $1 || -z $2 || -z $3 ]]; then
+    echo -e "1st argument: IPSW Link\n2nd argument: Board Config\n3rd argument: SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify."
+    exit 1
+fi
 
 replace=$(echo $2 | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
 
