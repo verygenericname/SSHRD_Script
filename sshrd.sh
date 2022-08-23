@@ -13,8 +13,8 @@ while !(lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" >> /dev/null); do
     sleep 1
 done
 fi 
-check=$(irecovery -q | grep CPID | sed 's/CPID: //')
-replace=$(irecovery -q | grep MODEL | sed 's/MODEL: //' | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
+check=$($oscheck/irecovery -q | grep CPID | sed 's/CPID: //')
+replace=$($oscheck/irecovery -q | grep MODEL | sed 's/MODEL: //' | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
 
 if [[ -e work ]]; then
  rm -rf work
@@ -39,16 +39,16 @@ fi
 
 $oscheck/gaster pwn > /dev/null
 $oscheck/gaster reset > /dev/null
-irecovery -f sshramdisk/iBSS.img4
+$oscheck/irecovery -f sshramdisk/iBSS.img4
 sleep 2
-irecovery -f sshramdisk/iBEC.img4
+$oscheck/irecovery -f sshramdisk/iBEC.img4
 if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]] || [[ "$check" == '0x8012' ]]; then
-irecovery -c go
+$oscheck/irecovery -c go
 fi
 sleep 2
-irecovery -c "setenv oblit-inprogress 5"
-irecovery -c saveenv
-irecovery -c reset
+$oscheck/irecovery -c "setenv oblit-inprogress 5"
+$oscheck/irecovery -c saveenv
+$oscheck/irecovery -c reset
 echo "device should now show a progress bar when booting and then go to setup screen"
 exit
 fi
@@ -69,16 +69,16 @@ fi
 
 $oscheck/gaster pwn > /dev/null
 $oscheck/gaster reset > /dev/null
-irecovery -f sshramdisk/iBSS.img4
+$oscheck/irecovery -f sshramdisk/iBSS.img4
 sleep 2
-irecovery -f sshramdisk/iBEC.img4
+$oscheck/irecovery -f sshramdisk/iBEC.img4
 if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]] || [[ "$check" == '0x8012' ]]; then
-irecovery -c go
+$oscheck/irecovery -c go
 fi
 sleep 2
-irecovery -c "setenv com.apple.System.boot-nonce $2"
-irecovery -c saveenv
-irecovery -c reset
+$oscheck/irecovery -c "setenv com.apple.System.boot-nonce $2"
+$oscheck/irecovery -c saveenv
+$oscheck/irecovery -c reset
 echo "nonce set to $2 successfully"
 exit
 fi
@@ -94,21 +94,21 @@ fi
 
 $oscheck/gaster pwn > /dev/null
 $oscheck/gaster reset > /dev/null
-irecovery -f sshramdisk/iBSS.img4
+$oscheck/irecovery -f sshramdisk/iBSS.img4
 sleep 2
-irecovery -f sshramdisk/iBEC.img4
+$oscheck/irecovery -f sshramdisk/iBEC.img4
 if [[ "$check" == '0x8010' ]] || [[ "$check" == '0x8015' ]] || [[ "$check" == '0x8011' ]] || [[ "$check" == '0x8012' ]]; then
-irecovery -c go
+$oscheck/irecovery -c go
 fi
 sleep 2
-irecovery -f sshramdisk/ramdisk.img4
-irecovery -c ramdisk
-irecovery -f sshramdisk/devicetree.img4
-irecovery -c devicetree
-irecovery -f sshramdisk/trustcache.img4
-irecovery -c firmware
-irecovery -f sshramdisk/kernelcache.img4
-irecovery -c bootx
+$oscheck/irecovery -f sshramdisk/ramdisk.img4
+$oscheck/irecovery -c ramdisk
+$oscheck/irecovery -f sshramdisk/devicetree.img4
+$oscheck/irecovery -c devicetree
+$oscheck/irecovery -f sshramdisk/trustcache.img4
+$oscheck/irecovery -c firmware
+$oscheck/irecovery -f sshramdisk/kernelcache.img4
+$oscheck/irecovery -c bootx
 echo "device should show text on screen now."
 exit
 fi
