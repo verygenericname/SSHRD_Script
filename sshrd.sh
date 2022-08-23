@@ -144,32 +144,32 @@ $oscheck/img4tool -e -s "$2" -m work/IM4M
 fi
 cd work
 ../$oscheck/pzb -g BuildManifest.plist $1
-../$oscheck/pzb -g $(awk "/${replace}/{x=1}x&&/iBSS[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
-../$oscheck/pzb -g $(awk "/${replace}/{x=1}x&&/iBEC[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
-../$oscheck/pzb -g $(awk "/${replace}/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
+../$oscheck/pzb -g $(awk "/"${replace}"/{x=1}x&&/iBSS[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
+../$oscheck/pzb -g $(awk "/"${replace}"/{x=1}x&&/iBEC[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
+../$oscheck/pzb -g $(awk "/"${replace}"/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
 if [[ "$oscheck" == 'Darwin' ]]; then
 ../$oscheck/pzb -g Firmware/$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1).trustcache $1
 else
 ../$oscheck/pzb -g Firmware/$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g').trustcache $1
 fi
-../$oscheck/pzb -g $(awk "/${replace}/{x=1}x&&/kernelcache.release/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
+../$oscheck/pzb -g $(awk "/"${replace}"/{x=1}x&&/kernelcache.release/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) $1
 if [[ "$oscheck" == 'Darwin' ]]; then
 ../$oscheck/pzb -g $(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) $1
 else
 ../$oscheck/pzb -g $(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g') $1
 fi
 cd ..
-$oscheck/gaster decrypt work/$(awk "/${replace}/{x=1}x&&/iBSS[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//') work/iBSS.dec
-$oscheck/gaster decrypt work/$(awk "/${replace}/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//') work/iBEC.dec
+$oscheck/gaster decrypt work/$(awk "/"${replace}"/{x=1}x&&/iBSS[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//') work/iBSS.dec
+$oscheck/gaster decrypt work/$(awk "/"${replace}"/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//') work/iBEC.dec
 $oscheck/iBoot64Patcher work/iBSS.dec work/iBSS.patched
 $oscheck/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
 $oscheck/iBoot64Patcher work/iBEC.dec work/iBEC.patched -n -b "rd=md0 debug=0x2014e -v wdt=-9999999"
 $oscheck/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
-$oscheck/img4 -i work/$(awk "/${replace}/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) -o work/kcache.raw
+$oscheck/img4 -i work/$(awk "/"${replace}"/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) -o work/kcache.raw
 $oscheck/Kernel64Patcher work/kcache.raw work/kcache.patched -a
 python3 kerneldiff.py work/kcache.raw work/kcache.patched work/kc.bpatch
-$oscheck/img4 -i work/$(awk "/${replace}/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
-$oscheck/img4 -i work/$(awk "/${replace}/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//') -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
+$oscheck/img4 -i work/$(awk "/"${replace}"/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1) -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [[ "$oscheck" == 'Linux' ]]; then echo "-J"; fi`
+$oscheck/img4 -i work/$(awk "/"${replace}"/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//') -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
 if [[ "$oscheck" == 'Darwin' ]]; then
 $oscheck/img4 -i work/$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1).trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
 $oscheck/img4 -i work/$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1) -o work/ramdisk.dmg
