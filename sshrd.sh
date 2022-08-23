@@ -180,12 +180,12 @@ fi
 if [[ "$oscheck" == 'Darwin' ]]; then
 hdiutil resize -size 150MB work/ramdisk.dmg
 hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
-$oscheck/gtar -x --no-overwrite-dir -f ssh.tar -C /tmp/SSHRD/
+$oscheck/gtar -x --no-overwrite-dir -f sshtars/ssh.tar -C /tmp/SSHRD/
 hdiutil detach -force /tmp/SSHRD
 hdiutil resize -sectors min work/ramdisk.dmg
 else
 $oscheck/hfsplus work/ramdisk.dmg grow 150000000 > /dev/null
-$oscheck/hfsplus work/ramdisk.dmg untar ssh.tar > /dev/null
+$oscheck/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
 fi
 $oscheck/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 echo "we are done, please use ./sshrd.sh boot to boot your device"
