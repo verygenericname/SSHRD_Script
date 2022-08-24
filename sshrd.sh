@@ -78,7 +78,7 @@ if [ "$1" = 'set-nonce' ]; then
 
 if [ -z "$2" ]; then
 echo "2nd argument: generator here"
-exit 1
+exit
 fi
 
 if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
@@ -110,7 +110,7 @@ if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
     :
 else
 echo "please make a ssh ramdisk first!"
-exit 1
+exit
 fi
 
 "$oscheck"/gaster pwn > /dev/null
