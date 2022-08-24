@@ -3,6 +3,7 @@
 set -e
 
 oscheck=$(uname)
+chmod +x "$oscheck"/*
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
@@ -143,7 +144,6 @@ else
 mkdir work
 fi
 
-chmod +x "$oscheck"/*
 "$oscheck"/gaster pwn
 if [ "$2" = "" ]; then
 "$oscheck"/img4tool -e -s shsh/"${check}".shsh -m work/IM4M
