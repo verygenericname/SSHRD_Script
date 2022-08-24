@@ -62,9 +62,10 @@ fi
 "$oscheck"/gaster reset > /dev/null
 "$oscheck"/irecovery -f sshramdisk/iBSS.img4
 sleep 2
-"$oscheck"/irecovery -f sshramdisk/iBEC.img4
 if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-"$oscheck"/irecovery -c go
+    :
+else
+"$oscheck"/irecovery -f sshramdisk/iBEC.img4
 fi
 sleep 2
 "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
@@ -99,7 +100,11 @@ fi
 cd work
 ../"$oscheck"/pzb -g BuildManifest.plist "$1"
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$1"
+if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
+    :
+else
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$1"
+fi
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$1"
 if [ "$oscheck" = 'Darwin' ]; then
 ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$1"
@@ -115,10 +120,18 @@ fi
 cd ..
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBSS.dec
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
+if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
+"$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched -b "rd=md0 debug=0x2014e -v wdt=-1"
+else
 "$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
+fi
 "$oscheck"/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
-"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -n -b "rd=md0 debug=0x2014e -v wdt=-9999999"
+if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
+    :
+else
+"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1"
 "$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
+fi
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
 "$oscheck"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
 python3 kerneldiff.py work/kcache.raw work/kcache.patched work/kc.bpatch
