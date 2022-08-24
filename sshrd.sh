@@ -135,7 +135,7 @@ fi
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
-    printf "failed\n"
+    echo "failed"
     rm -rf work
 }
 
@@ -202,6 +202,6 @@ else
 fi
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
-printf "we are done, please use ./sshrd.sh boot to boot your device\n"
-printf "cleanup...\n"
+echo "we are done, please use ./sshrd.sh boot to boot your device"
+echo "cleanup..."
 rm -rf work
