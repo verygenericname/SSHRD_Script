@@ -3,7 +3,6 @@
 set -e
 
 oscheck=$(uname)
-chmod +x "$oscheck"/*
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
@@ -21,6 +20,8 @@ else
     mv gaster "$oscheck"/
     rm -rf gaster gaster-"$oscheck".zip
 fi
+
+chmod +x "$oscheck"/*
 
 if [ "$oscheck" = 'Darwin' ]; then
 while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
