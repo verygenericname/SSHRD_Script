@@ -49,61 +49,6 @@ else
 mkdir sshramdisk
 fi
 
-if [ "$1" = 'reset' ]; then
-
-if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
-    :
-else
-echo "please make a ssh ramdisk first!"
-exit
-fi
-
-"$oscheck"/gaster pwn > /dev/null
-"$oscheck"/gaster reset > /dev/null
-"$oscheck"/irecovery -f sshramdisk/iBSS.img4
-sleep 2
-"$oscheck"/irecovery -f sshramdisk/iBEC.img4
-if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-"$oscheck"/irecovery -c go
-fi
-sleep 2
-"$oscheck"/irecovery -c "setenv oblit-inprogress 5"
-"$oscheck"/irecovery -c saveenv
-"$oscheck"/irecovery -c reset
-echo "device should now show a progress bar when booting and then go to setup screen"
-exit
-fi
-
-if [ "$1" = 'set-nonce' ]; then
-
-if [ -z "$2" ]; then
-echo "2nd argument: generator here"
-exit
-fi
-
-if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
-    :
-else
-echo "please make a ssh ramdisk first!"
-exit
-fi
-
-"$oscheck"/gaster pwn > /dev/null
-"$oscheck"/gaster reset > /dev/null
-"$oscheck"/irecovery -f sshramdisk/iBSS.img4
-sleep 2
-"$oscheck"/irecovery -f sshramdisk/iBEC.img4
-if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-"$oscheck"/irecovery -c go
-fi
-sleep 2
-"$oscheck"/irecovery -c "setenv com.apple.System.boot-nonce $2"
-"$oscheck"/irecovery -c saveenv
-"$oscheck"/irecovery -c reset
-echo "nonce set to $2 successfully"
-exit
-fi
-
 if [ "$1" = 'boot' ]; then
 
 if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
