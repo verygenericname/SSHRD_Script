@@ -10,6 +10,15 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
+if [ -e "$oscheck"/gaster ]; then
+    :
+else
+    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
+    unzip gaster-"$oscheck".zip
+    mv gaster "$oscheck"/
+    rm -rf gaster gaster-"$oscheck".zip
+fi
+
 oscheck=$(uname)
 if [ "$oscheck" = 'Darwin' ]; then
 while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
@@ -125,15 +134,6 @@ fi
 if [ -z "$1" ]; then
     printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify.\n"
     exit
-fi
-
-if [ -e "$oscheck"/gaster ]; then
-    :
-else
-    curl -LO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
-    unzip gaster-"$oscheck".zip
-    mv gaster "$oscheck"/
-    rm -rf gaster gaster-"$oscheck".zip
 fi
 
 if [ -e work ]; then
