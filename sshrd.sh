@@ -124,7 +124,7 @@ fi
 
 if [ -z "$1" ]; then
     printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify.\n"
-    exit 1
+    exit
 fi
 
 if [ -e "$oscheck"/gaster ]; then
@@ -189,6 +189,8 @@ hdiutil resize -size 150MB work/ramdisk.dmg
 hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 if [ "$replace" = 'j42d' ]; then
 "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/atvssh.tar -C /tmp/SSHRD/
+elif [ "$check" = '0x8012' ]; then
+"$oscheck"/gtar -x --no-overwrite-dir -f sshtars/t2ssh.tar -C /tmp/SSHRD/
 else
 "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar -C /tmp/SSHRD/
 fi
@@ -198,6 +200,8 @@ else
 "$oscheck"/hfsplus work/ramdisk.dmg grow 150000000 > /dev/null
 if [ "$replace" = 'j42d' ]; then
 "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/atvssh.tar > /dev/null
+elif [ "$check" = '0x8012' ]; then
+"$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
 else
 "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
 fi
