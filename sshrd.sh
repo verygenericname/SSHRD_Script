@@ -1,6 +1,15 @@
 #!/usr/bin/env sh
 
 set -e
+
+ERR_HANDLER () {
+    [ $? -eq 0 ] && exit
+    echo "failed"
+    rm -rf work
+}
+
+trap ERR_HANDLER EXIT
+
 oscheck=$(uname)
 if [ "$oscheck" = 'Darwin' ]; then
 while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
@@ -132,14 +141,6 @@ if [ -e work ]; then
 else
 mkdir work
 fi
-
-ERR_HANDLER () {
-    [ $? -eq 0 ] && exit
-    echo "failed"
-    rm -rf work
-}
-
-trap ERR_HANDLER EXIT
 
 chmod +x "$oscheck"/*
 "$oscheck"/gaster pwn
