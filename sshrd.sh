@@ -2,13 +2,7 @@
 
 set -e
 
-ERR_HANDLER () {
-    [ $? -eq 0 ] && exit
-    echo "failed"
-    rm -rf work
-}
-
-trap ERR_HANDLER EXIT
+oscheck=$(uname)
 
 if [ -e "$oscheck"/gaster ]; then
     :
@@ -19,7 +13,14 @@ else
     rm -rf gaster gaster-"$oscheck".zip
 fi
 
-oscheck=$(uname)
+ERR_HANDLER () {
+    [ $? -eq 0 ] && exit
+    echo "failed"
+    rm -rf work
+}
+
+trap ERR_HANDLER EXIT
+
 if [ "$oscheck" = 'Darwin' ]; then
 while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
      echo "waiting for dfu mode"
