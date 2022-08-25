@@ -35,7 +35,7 @@ while ! (lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" >> /dev/null); d
 done
 fi
 check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
-replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //' | tr '[:upper:]' '[:lower:]' | sed 's/ap//g')
+replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
 
 if [ -e work ]; then
  rm -rf work
@@ -151,10 +151,11 @@ fi
 if [ "$oscheck" = 'Darwin' ]; then
 hdiutil resize -size 150MB work/ramdisk.dmg
 hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
-if [ "$replace" = 'j42d' ]; then
+if [ "$replace" = 'j42dap' ]; then
 "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/atvssh.tar -C /tmp/SSHRD/
 elif [ "$check" = '0x8012' ]; then
 "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/t2ssh.tar -C /tmp/SSHRD/
+echo "WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
 else
 "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar -C /tmp/SSHRD/
 fi
@@ -162,10 +163,11 @@ hdiutil detach -force /tmp/SSHRD
 hdiutil resize -sectors min work/ramdisk.dmg
 else
 "$oscheck"/hfsplus work/ramdisk.dmg grow 150000000 > /dev/null
-if [ "$replace" = 'j42d' ]; then
+if [ "$replace" = 'j42dap' ]; then
 "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/atvssh.tar > /dev/null
 elif [ "$check" = '0x8012' ]; then
 "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
+echo "WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
 else
 "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
 fi
