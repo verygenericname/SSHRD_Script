@@ -51,7 +51,7 @@ fi
 
 if [ "$1" = 'reset' ]; then
 
-if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
+if [ -e sshramdisk/iBSS.img4 ]; then
     :
 else
 echo "please make a ssh ramdisk first!"
@@ -82,7 +82,7 @@ echo "2nd argument: generator here"
 exit
 fi
 
-if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
+if [ -e sshramdisk/iBSS.img4 ]; then
     :
 else
 echo "please make a ssh ramdisk first!"
