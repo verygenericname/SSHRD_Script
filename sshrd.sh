@@ -138,7 +138,7 @@ exit
 fi
 
 if [ -z "$1" ]; then
-    printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\n"
+    printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify.\n"
     exit
 fi
 
