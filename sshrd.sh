@@ -49,6 +49,63 @@ else
 mkdir sshramdisk
 fi
 
+if [ "$1" = 'reset' ]; then
+
+if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
+    :
+else
+echo "please make a ssh ramdisk first!"
+exit
+fi
+
+"$oscheck"/gaster pwn > /dev/null
+"$oscheck"/gaster reset > /dev/null
+"$oscheck"/irecovery -f sshramdisk/iBSS.img4
+sleep 2
+if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
+    :
+else
+"$oscheck"/irecovery -f sshramdisk/iBEC.img4
+fi
+sleep 2
+"$oscheck"/irecovery -c "setenv oblit-inprogress 5"
+"$oscheck"/irecovery -c saveenv
+"$oscheck"/irecovery -c reset
+echo "device should now show a progress bar when booting and then go to setup screen"
+exit
+fi
+
+if [ "$1" = 'set-nonce' ]; then
+
+if [ -z "$2" ]; then
+echo "2nd argument: generator here"
+exit
+fi
+
+if [ -e sshramdisk/iBSS.img4 ] && [ -e sshramdisk/iBEC.img4 ]; then
+    :
+else
+echo "please make a ssh ramdisk first!"
+exit
+fi
+
+"$oscheck"/gaster pwn > /dev/null
+"$oscheck"/gaster reset > /dev/null
+"$oscheck"/irecovery -f sshramdisk/iBSS.img4
+sleep 2
+if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
+    :
+else
+"$oscheck"/irecovery -f sshramdisk/iBEC.img4
+fi
+sleep 2
+"$oscheck"/irecovery -c "setenv com.apple.System.boot-nonce $2"
+"$oscheck"/irecovery -c saveenv
+"$oscheck"/irecovery -c reset
+echo "nonce set to $2 successfully"
+exit
+fi
+
 if [ "$1" = 'boot' ]; then
 
 if [ -e sshramdisk/iBSS.img4 ]; then
@@ -125,7 +182,7 @@ else
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
 fi
 if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-"$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched -b "rd=md0 debug=0x2014e -v wdt=-1"
+"$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched -b "rd=md0 debug=0x2014e -v wdt=-1" -n
 else
 "$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
 fi
@@ -133,7 +190,7 @@ fi
 if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
     :
 else
-"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1"
+"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1" -n
 "$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
 fi
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw

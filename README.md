@@ -44,6 +44,6 @@ Create and boot a SSH ramdisk on checkm8 devices
 
 You can also set your nonce/reset your iPhone inside the ramdisk.
 
-set nonce: `nvram com.apple.System.boot-nonce=<generator>`
+set nonce: `./sshrd.sh set-nonce <generator>`
 
-reset: `nvram oblit-inprogress=5`
+reset: `./sshrd.sh reset`
