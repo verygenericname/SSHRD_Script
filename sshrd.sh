@@ -12,6 +12,12 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
+if [ -e sshtars/README.md ]; then
+    :
+else
+git submodule update --init --recursive
+fi
+
 if [ -e "$oscheck"/gaster ]; then
     :
 else
@@ -25,12 +31,12 @@ chmod +x "$oscheck"/*
 
 if [ "$oscheck" = 'Darwin' ]; then
 while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
-     echo "waiting for dfu mode"
+     echo "waiting for dfu mode device"
      sleep 1
 done
 else
 while ! (lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" >> /dev/null); do
-    echo "waiting for dfu mode"
+    echo "waiting for dfu mode device"
     sleep 1
 done
 fi
