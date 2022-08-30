@@ -42,8 +42,6 @@ Create and boot a SSH ramdisk on checkm8 devices
 # Other Stuff
 - [Reddit Post](https://www.reddit.com/r/jailbreak/comments/wgiye1/free_release_ssh_ramdisk_creator_for_iphones_ipad/)
 
-You can also set your nonce/reset your iPhone inside the ramdisk.
-
-set nonce: `./sshrd.sh set-nonce <generator>`
+You can also reset your iPhone
 
 reset: `./sshrd.sh reset`
