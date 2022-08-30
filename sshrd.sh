@@ -81,37 +81,6 @@ echo "device should now show a progress bar when booting and then go to setup sc
 exit
 fi
 
-if [ "$1" = 'set-nonce' ]; then
-
-if [ -z "$2" ]; then
-echo "2nd argument: generator here"
-exit
-fi
-
-if [ -e sshramdisk/iBSS.img4 ]; then
-    :
-else
-echo "please make a ssh ramdisk first!"
-exit
-fi
-
-"$oscheck"/gaster pwn > /dev/null
-"$oscheck"/gaster reset > /dev/null
-"$oscheck"/irecovery -f sshramdisk/iBSS.img4
-sleep 2
-if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-    :
-else
-"$oscheck"/irecovery -f sshramdisk/iBEC.img4
-fi
-sleep 2
-"$oscheck"/irecovery -c "setenv com.apple.System.boot-nonce $2"
-"$oscheck"/irecovery -c saveenv
-"$oscheck"/irecovery -c reset
-echo "nonce set to $2 successfully"
-exit
-fi
-
 if [ "$1" = 'boot' ]; then
 
 if [ -e sshramdisk/iBSS.img4 ]; then
@@ -144,7 +113,7 @@ exit
 fi
 
 if [ -z "$1" ]; then
-    printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\nset-nonce: sets the nonce to the generator you specify.\n"
+    printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\n"
     exit
 fi
 
