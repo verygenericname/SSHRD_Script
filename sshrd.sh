@@ -120,7 +120,7 @@ exit
 fi
 
 if [ -z "$1" ]; then
-    printf "1st argument: IPSW Link\nExtra arguments:\nreset: wipes the device, without losing version.\n"
+    printf "1st argument: IPSW Link\nExtra arguments:\nreset: wipes the device, without losing version.\nTrollStore: install trollstore to system app\n"
     exit
 fi
 
