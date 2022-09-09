@@ -81,6 +81,13 @@ echo "device should now show a progress bar when booting and then go to setup sc
 exit
 fi
 
+if [ "$2" = 'TrollStore' ]; then
+if [ -z "$3" ]; then
+echo "please give a uninstallable system app to use (Tips is a great choice)"
+exit
+fi
+fi
+
 if [ "$1" = 'boot' ]; then
 
 if [ -e sshramdisk/iBSS.img4 ]; then
@@ -113,7 +120,7 @@ exit
 fi
 
 if [ -z "$1" ]; then
-    printf "1st argument: IPSW Link\n2nd argument(OPTIONAL): SHSH Blob\nExtra arguments:\nreset: wipes the device, without losing version.\n"
+    printf "1st argument: IPSW Link\nExtra arguments:\nreset: wipes the device, without losing version.\n"
     exit
 fi
 
@@ -124,11 +131,7 @@ mkdir work
 fi
 
 "$oscheck"/gaster pwn
-if [ "$2" = "" ]; then
 "$oscheck"/img4tool -e -s shsh/"${check}".shsh -m work/IM4M
-else
-"$oscheck"/img4tool -e -s "$2" -m work/IM4M
-fi
 cd work
 ../"$oscheck"/pzb -g BuildManifest.plist "$1"
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$1"
@@ -157,7 +160,7 @@ else
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
 fi
 if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-"$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched -b "rd=md0 debug=0x2014e -v wdt=-1" -n
+"$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched -b "rd=md0 debug=0x2014e -v wdt=-1 `if [ -z "$2" ]; then :; else echo "TrollStore=$3"; fi`" -n
 else
 "$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
 fi
