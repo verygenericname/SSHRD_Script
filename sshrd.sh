@@ -29,7 +29,15 @@ fi
 
 chmod +x "$oscheck"/*
 
-if [ "$oscheck" = 'Darwin' ]; then
+if [ "$1" = 'dump-blobs' ]; then
+"$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/rdisk1" | dd of=dump.raw bs=256 count=$((0x4000))
+"$oscheck"/img4tool --convert -s dumped.shsh dump.raw
+echo "blobs hopefully dumped"
+exit
+elif [ "$1" = 'ssh' ]; then
+"$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
+exit
+elif [ "$oscheck" = 'Darwin' ]; then
 while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
      echo "waiting for dfu mode device"
      sleep 1
