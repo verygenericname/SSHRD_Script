@@ -16,31 +16,38 @@ Create and boot a SSH ramdisk on checkm8 devices
 ---
 
 # Prerequsites
+
 1. A computer running macOS/linux
 2. A checkm8 device (A7-A11)
-3. iOS 12-16 IPSW link
-4. libimobiledevice installed on your Mac/Linux
+3. libimobiledevice installed on your Mac/Linux computer
     - [brew](https://brew.sh) or [Procursus](https://github.com/ProcursusTeam/Procursus) is required.
     - brew: `brew install libimobiledevice`
     - Procursus: `sudo apt install libimobiledevice-utils libusbmuxd-tools`
     - Linux: `sudo apt install libimobiledevice-utils libusbmuxd-tools`
 
 # Usage
+
 1. Clone and cd into this repository: `git clone https://github.com/verygenericname/SSHRD_Script --recursive && cd SSHRD_Script`
     - If you have cloned this before, run `cd SSHRD_Script && git pull` to pull new changes
-2. Run `./sshrd.sh <link to your ipsw>`, **without** the `<>`.
+2. Run `./sshrd.sh <iOS version for ramdisk>`, **without** the `<>`.
+    - 14.3 is a recommended version, if your device supports it. If it doesn't, use the latest for your device (probably 12.5.6)
 3. Place your device into DFU mode
     - A11 users, go to recovery first, then DFU.
 4. Run `./sshrd.sh boot` to boot the ramdisk
-5. To ssh into the device, open up another terminal window and run `iproxy 2222 22`.
-6. In the first terminal window, run `ssh -p2222 root@localhost`
+5. Run `iproxy 2222 22 &` to run iproxy in the background
+    - After you're done with the ramdisk, you should run `killall iproxy` to stop its background process
+6. Run `./sshrd.sh ssh` to connect to SSH on your device
 7. Finally, to mount the filesystems, run `mount_filesystems`  
-  - /var is mounted to /mnt2 in the ssh session.
+    - /var is mounted to /mnt2 in the ssh session.
+    - /private/preboot is mounted to /mnt6.
 8. Have fun!
 
+# Other commands
+
+- Reset your device: `./sshrd.sh reset`
+- Dump onboard blobs: `./sshrd.sh dump-blobs`
+- Delete old SSH ramdisk: `./sshrd.sh clean`
+
 # Other Stuff
+
 - [Reddit Post](https://www.reddit.com/r/jailbreak/comments/wgiye1/free_release_ssh_ramdisk_creator_for_iphones_ipad/)
-
-You can also reset your iPhone
-
-reset: `./sshrd.sh reset`
