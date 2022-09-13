@@ -34,20 +34,36 @@ if [ "$1" = 'clean' ]; then
     echo "[*] Removed the current created SSH ramdisk"
     exit
 elif [ "$1" = 'dump-blobs' ]; then
+    if [ -e "$(which iproxy)" ]; then
+        :
+    else
+        echo "Please install iproxy first...."
+    exit
+    fi
+    iproxy 2222 22 &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/rdisk1" | dd of=dump.raw bs=256 count=$((0x4000))
     "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
+    killall iproxy
     echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
     exit
 elif [ "$1" = 'ssh' ]; then
+        if [ -e "$(which iproxy)" ]; then
+        :
+    else
+        echo "Please install iproxy first...."
+    exit
+    fi
+    iproxy 2222 22 &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
+    killall iproxy
     exit
 elif [ "$oscheck" = 'Darwin' ]; then
-    while ! (system_profiler SPUSBDataType 2> /dev/null | grep " Apple Mobile Device" >> /dev/null); do
+    while ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); do
         echo "[*] Waiting for device in DFU mode"
         sleep 1
     done
 else
-    while ! (lsusb 2> /dev/null | grep " Apple, Inc. Mobile Device" >> /dev/null); do
+    while ! (lsusb 2> /dev/null | grep ' Apple, Inc. Mobile Device (DFU Mode)' >> /dev/null); do
         echo "[*] Waiting for device in DFU mode"
         sleep 1
     done
