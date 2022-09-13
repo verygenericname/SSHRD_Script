@@ -34,13 +34,11 @@ Create and boot a SSH ramdisk on checkm8 devices
 3. Place your device into DFU mode
     - A11 users, go to recovery first, then DFU.
 4. Run `./sshrd.sh boot` to boot the ramdisk
-5. Run `iproxy 2222 22 &` to run iproxy in the background
-    - After you're done with the ramdisk, you should run `killall iproxy` to stop its background process
-6. Run `./sshrd.sh ssh` to connect to SSH on your device
-7. Finally, to mount the filesystems, run `mount_filesystems`  
+5. Run `./sshrd.sh ssh` to connect to SSH on your device
+6. Finally, to mount the filesystems, run `mount_filesystems`  
     - /var is mounted to /mnt2 in the ssh session.
     - /private/preboot is mounted to /mnt6.
-8. Have fun!
+7. Have fun!
 
 # Other commands
 
