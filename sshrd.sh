@@ -5,7 +5,7 @@ set -e
 if [ -e "$(which iproxy)" ]; then
     :
 else
-    echo "Please install iproxy first...."
+    echo "[!] Please install iproxy first...."
     exit
 fi
 
