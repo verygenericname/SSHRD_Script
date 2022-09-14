@@ -2,6 +2,13 @@
 
 set -e
 
+if [ -e "$(which iproxy)" ]; then
+    :
+else
+    echo "Please install iproxy first...."
+    exit
+fi
+
 oscheck=$(uname)
 
 ERR_HANDLER () {
@@ -34,12 +41,6 @@ if [ "$1" = 'clean' ]; then
     echo "[*] Removed the current created SSH ramdisk"
     exit
 elif [ "$1" = 'dump-blobs' ]; then
-    if [ -e "$(which iproxy)" ]; then
-        :
-    else
-        echo "Please install iproxy first...."
-    exit
-    fi
     iproxy 2222 22 &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/rdisk1" | dd of=dump.raw bs=256 count=$((0x4000))
     "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
@@ -47,12 +48,6 @@ elif [ "$1" = 'dump-blobs' ]; then
     echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
     exit
 elif [ "$1" = 'ssh' ]; then
-        if [ -e "$(which iproxy)" ]; then
-        :
-    else
-        echo "Please install iproxy first...."
-    exit
-    fi
     iproxy 2222 22 &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
     killall iproxy
