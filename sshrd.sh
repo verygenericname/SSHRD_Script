@@ -138,9 +138,7 @@ if [ "$1" = 'boot' ]; then
     fi
     
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
-    sleep 1
     "$oscheck"/irecovery -c ramdisk
-    sleep 2
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
     "$oscheck"/irecovery -c devicetree
     "$oscheck"/irecovery -f sshramdisk/trustcache.img4
