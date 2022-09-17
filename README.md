@@ -19,11 +19,6 @@ Create and boot a SSH ramdisk on checkm8 devices
 
 1. A computer running macOS/linux
 2. A checkm8 device (A7-A11)
-3. libimobiledevice installed on your Mac/Linux computer
-    - [brew](https://brew.sh) or [Procursus](https://github.com/ProcursusTeam/Procursus) is required.
-    - brew: `brew install libimobiledevice`
-    - Procursus: `sudo apt install libimobiledevice-utils libusbmuxd-tools`
-    - Linux: `sudo apt install libimobiledevice-utils libusbmuxd-tools`
 
 # Usage
 
