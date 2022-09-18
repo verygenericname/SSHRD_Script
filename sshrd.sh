@@ -2,7 +2,6 @@
 
 set -e
 
-
 oscheck=$(uname)
 
 ERR_HANDLER () {
@@ -13,15 +12,11 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
-if [ -e sshtars/README.md ]; then
-    :
-else
+if [ ! -e sshtars/README.md ]; then
     git submodule update --init --recursive
 fi
 
-if [ -e "$oscheck"/gaster ]; then
-    :
-else
+if [ ! -e "$oscheck"/gaster ]; then
     curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
     unzip gaster-"$oscheck".zip
     mv gaster "$oscheck"/
@@ -47,13 +42,19 @@ elif [ "$1" = 'ssh' ]; then
     killall iproxy
     exit
 elif [ "$oscheck" = 'Darwin' ]; then
-    while ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); do
+    if ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); then
         echo "[*] Waiting for device in DFU mode"
+    fi
+    
+    while ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); do
         sleep 1
     done
 else
-    while ! (lsusb 2> /dev/null | grep ' Apple, Inc. Mobile Device (DFU Mode)' >> /dev/null); do
+    if ! (lsusb 2> /dev/null | grep ' Apple, Inc. Mobile Device (DFU Mode)' >> /dev/null); then
         echo "[*] Waiting for device in DFU mode"
+    fi
+    
+    while ! (lsusb 2> /dev/null | grep ' Apple, Inc. Mobile Device (DFU Mode)' >> /dev/null); do
         sleep 1
     done
 fi
@@ -66,20 +67,14 @@ ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$osche
 
 if [ -e work ]; then
     rm -rf work
-else
-    :
 fi
 
-if [ -e sshramdisk ]; then
-    :
-else
+if [ ! -e sshramdisk ]; then
     mkdir sshramdisk
 fi
 
 if [ "$1" = 'reset' ]; then
-    if [ -e sshramdisk/iBSS.img4 ]; then
-        :
-    else
+    if [ ! -e sshramdisk/iBSS.img4 ]; then
         echo "[-] Please create an SSH ramdisk first!"
         exit
     fi
@@ -112,9 +107,7 @@ if [ "$2" = 'TrollStore' ]; then
 fi
 
 if [ "$1" = 'boot' ]; then
-    if [ -e sshramdisk/iBSS.img4 ]; then
-        :
-    else
+    if [ ! -e sshramdisk/iBSS.img4 ]; then
         echo "[-] Please create an SSH ramdisk first!"
         exit
     fi
@@ -149,9 +142,7 @@ if [ -z "$1" ]; then
     exit
 fi
 
-if [ -e work ]; then
-    :
-else
+if [ ! -e work ]; then
     mkdir work
 fi
 
