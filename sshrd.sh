@@ -107,15 +107,6 @@ if [ "$1" = 'reset' ]; then
     exit
 fi
 
-if [ "$2" = "" ]; then
-    :
-    elif [ "$2" = "TrollStore" ] | [ "$2" = "Pogo" ] ; then
-    :
-    else
-        echo "[-] Not a option, TrollStore or Pogo"
-        exit
-fi
-
 if [ "$2" = 'TrollStore' ]; then
     if [ -z "$3" ]; then
         echo "[-] Please pass an uninstallable system app to use (Tips is a great choice)"
