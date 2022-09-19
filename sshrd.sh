@@ -228,7 +228,7 @@ else
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    hdiutil resize -size 250MB work/ramdisk.dmg
+    hdiutil resize -size 300MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
     if [ "$replace" = 'j42dap' ]; then
@@ -243,7 +243,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
-    "$oscheck"/hfsplus work/ramdisk.dmg grow 250000000 > /dev/null
+    "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
 
     if [ "$replace" = 'j42dap' ]; then
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/atvssh.tar > /dev/null
