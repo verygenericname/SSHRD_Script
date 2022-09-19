@@ -12,15 +12,16 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
+if [ ! -e sshtars/README.md ]; then
+    git submodule update --init --recursive
+fi
+
 if [ -e sshtars/ssh.tar.gz ]; then
     if [ "$oscheck" = 'Linux' ]; then
     gzip -d sshtars/ssh.tar.gz
     gzip -d sshtars/t2ssh.tar.gz
     gzip -d sshtars/atvssh.tar.gz
     fi
-fi
-if [ ! -e sshtars/README.md ]; then
-    git submodule update --init --recursive
 fi
 
 if [ ! -e "$oscheck"/gaster ]; then
