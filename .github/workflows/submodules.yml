@@ -20,7 +20,7 @@ jobs:
     - name: Update submodules
       shell: bash
       run: |
-        git submodule update --init --recursive
+        git submodule foreach git pull origin main
 
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
