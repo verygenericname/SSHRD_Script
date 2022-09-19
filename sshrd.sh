@@ -107,7 +107,7 @@ if [ "$1" = 'reset' ]; then
     exit
 fi
 
-if [ "$2" = '' ]; then
+if [ "$2" = "" ]; then
     :
     elif [ "$2" = "TrollStore" ] | [ "$2" = "Pogo" ] ; then
     :
