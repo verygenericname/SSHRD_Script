@@ -1,36 +1,19 @@
-name: 'Submodules Sync'
-
+name: Update module
 on:
-  # Allows you to run this workflow manually from the Actions tab or through HTTP API
-  workflow_dispatch:
-
+  repository_dispatch:
+    types: update
 jobs:
-  sync:
-    name: 'Submodules Sync'
+  update:
     runs-on: ubuntu-latest
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
-
     steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.CI_TOKEN }}
-        submodules: true
-
-    # Update references
-    - name: Git Sumbodule Update
-      run: |
-        git pull --recurse-submodules
-        git submodule update --remote --recursive
-
-    - name: Commit update
-      run: |
-        git config --global user.name 'Git bot'
-        git config --global user.email 'bot@noreply.github.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+          submodules: recursive
+      - name: Update module
+        run: |
+          git submodule update --init --recursive --checkout -f --remote -- "${{github.event.client_payload.module}}"
+          git config --global user.name "GitHub Action"
+          git config --global user.email "noreply@github.com"
+          git commit -am "deploy: ${{github.event.client_payload.module}} - ${{github.event.client_payload.sha}}"
+          git push
