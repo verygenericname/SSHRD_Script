@@ -114,13 +114,6 @@ if [ "$2" = 'TrollStore' ]; then
     fi
 fi
 
-if [ "$2" = 'Pogo' ]; then
-    if [ -z "$3" ]; then
-        echo "[-] Please pass an uninstallable system app to use (Tips is a great choice)"
-        exit
-    fi
-fi
-
 if [ "$1" = 'boot' ]; then
     if [ ! -e sshramdisk/iBSS.img4 ]; then
         echo "[-] Please create an SSH ramdisk first!"
@@ -228,7 +221,7 @@ else
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    hdiutil resize -size 300MB work/ramdisk.dmg
+    hdiutil resize -size 150MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
     if [ "$replace" = 'j42dap' ]; then
@@ -243,7 +236,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
-    "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
+    "$oscheck"/hfsplus work/ramdisk.dmg grow 150000000 > /dev/null
 
     if [ "$replace" = 'j42dap' ]; then
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/atvssh.tar > /dev/null
