@@ -12,17 +12,8 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
-if [ ! -e sshtars/README.md ]; then
-    git submodule update --init --recursive
-fi
-
-if [ -e sshtars/ssh.tar.gz ]; then
-    if [ "$oscheck" = 'Linux' ]; then
-    gzip -d sshtars/ssh.tar.gz
-    gzip -d sshtars/t2ssh.tar.gz
-    gzip -d sshtars/atvssh.tar.gz
-    fi
-fi
+# git submodule update --init --recursive
+gzip -d ramdisk.tar.gz
 
 if [ ! -e "$oscheck"/gaster ]; then
     curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
@@ -33,23 +24,7 @@ fi
 
 chmod +x "$oscheck"/*
 
-if [ "$1" = 'clean' ]; then
-    rm -rf sshramdisk work
-    echo "[*] Removed the current created SSH ramdisk"
-    exit
-elif [ "$1" = 'dump-blobs' ]; then
-    "$oscheck"/iproxy 2222 22 &>/dev/null &
-    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/rdisk1" | dd of=dump.raw bs=256 count=$((0x4000))
-    "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
-    killall iproxy
-    echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
-    exit
-elif [ "$1" = 'ssh' ]; then
-    "$oscheck"/iproxy 2222 22 &>/dev/null &
-    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
-    killall iproxy
-    exit
-elif [ "$oscheck" = 'Darwin' ]; then
+if [ "$oscheck" = 'Darwin' ]; then
     if ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); then
         echo "[*] Waiting for device in DFU mode"
     fi
@@ -79,38 +54,6 @@ fi
 
 if [ ! -e sshramdisk ]; then
     mkdir sshramdisk
-fi
-
-if [ "$1" = 'reset' ]; then
-    if [ ! -e sshramdisk/iBSS.img4 ]; then
-        echo "[-] Please create an SSH ramdisk first!"
-        exit
-    fi
-
-    "$oscheck"/gaster pwn > /dev/null
-    "$oscheck"/gaster reset > /dev/null
-    "$oscheck"/irecovery -f sshramdisk/iBSS.img4
-    sleep 2
-    "$oscheck"/irecovery -f sshramdisk/iBEC.img4
-
-    if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-        "$oscheck"/irecovery -c go
-    fi
-
-    sleep 2
-    "$oscheck"/irecovery -c "setenv oblit-inprogress 5"
-    "$oscheck"/irecovery -c saveenv
-    "$oscheck"/irecovery -c reset
-
-    echo "[*] Device should now show a progress bar and erase all data"
-    exit
-fi
-
-if [ "$2" = 'TrollStore' ]; then
-    if [ -z "$3" ]; then
-        echo "[-] Please pass an uninstallable system app to use (Tips is a great choice)"
-        exit
-    fi
 fi
 
 if [ "$1" = 'boot' ]; then
@@ -143,7 +86,7 @@ if [ "$1" = 'boot' ]; then
 fi
 
 if [ -z "$1" ]; then
-    printf "1st argument: iOS version for the ramdisk\nExtra arguments:\nreset: wipes the device, without losing version.\nTrollStore: install trollstore to system app\n"
+    printf "1st argument: iOS version for the ramdisk\n"
     exit
 fi
 
@@ -200,33 +143,17 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil resize -size 210MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
-    if [ "$replace" = 'j42dap' ]; then
-        "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/atvssh.tar.gz -C /tmp/SSHRD/
-    elif [ "$check" = '0x8012' ]; then
-        "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/t2ssh.tar.gz -C /tmp/SSHRD/
-        echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
-    else
-        "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar.gz -C /tmp/SSHRD/
-    fi
+    "$oscheck"/gtar -x --no-overwrite-dir -f ramdisk.tar.gz -C /tmp/SSHRD/
 
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
     "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
 
-    if [ "$replace" = 'j42dap' ]; then
-        "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/atvssh.tar > /dev/null
-    elif [ "$check" = '0x8012' ]; then
-        "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
-        echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
-    else
-        "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
-    fi
+    "$oscheck"/hfsplus work/ramdisk.dmg untar ramdisk.tar > /dev/null
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 
 echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
-
-echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
