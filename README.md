@@ -34,6 +34,11 @@ Create and boot a SSH ramdisk on checkm8 devices
     - /private/preboot is mounted to /mnt6.
 7. Have fun!
 
+# Linux notes
+- you may have to run sudo systemctl stop usbmuxd
+- then run sudo usbmuxd -p -f
+- then ssh will work
+
 # Other commands
 
 - Reset your device: `./sshrd.sh reset`
