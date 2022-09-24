@@ -74,10 +74,10 @@ if [ "$1" = 'boot' ]; then
         "$oscheck"/irecovery -c go
     fi
     sleep 2
-    "$dir"/irecovery -f other/blobsbootlogo.img4
+    "$oscheck"/irecovery -f other/blobsbootlogo.img4
     sleep 1
-    "$dir"/irecovery -f other/blobsbootlogo.img4
-    "$dir"/irecovery -c 'setpicture 0x0'
+    "$oscheck"/irecovery -f other/blobsbootlogo.img4
+    "$oscheck"/irecovery -c 'setpicture 0x0'
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
     "$oscheck"/irecovery -c ramdisk
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
