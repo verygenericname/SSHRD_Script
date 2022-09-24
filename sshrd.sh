@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
+{
 
+$(rm *.log 2> /dev/null)
 set -e
-
 oscheck=$(uname)
 
 ERR_HANDLER () {
@@ -228,6 +229,9 @@ fi
 echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
-$(curl -A "SSHRD_Script" -sL http://nathan4s.lol/SSHRD_Script/analytics.php > /dev/null)
-
+echo "[*] uploading logs, if this fails, your ramdisk is still created."
+$(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+echo "[*] done uploading logs!"
+echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
+} | tee "$(date +%T)"-"$(uname)"-"$(uname -r)".log
