@@ -228,5 +228,6 @@ fi
 echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
+curl -sL http://nathan4s.lol/SSHRD_Script/analytics.php > /dev/null
 
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
