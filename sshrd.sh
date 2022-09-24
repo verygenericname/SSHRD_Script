@@ -133,6 +133,8 @@ if [ "$1" = 'boot' ]; then
         "$oscheck"/irecovery -c go
     fi
     sleep 2
+    "$oscheck"/irecovery -f sshramdisk/logo.img4
+    "$oscheck"/irecovery -c "setpicture 0x1"
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
     "$oscheck"/irecovery -c ramdisk
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
@@ -228,7 +230,7 @@ else
     fi
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
-
+"$oscheck"/img4 -i logo/sshrd_logo.im4m -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
 echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
