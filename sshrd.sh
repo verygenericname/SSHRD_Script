@@ -69,15 +69,12 @@ if [ "$1" = 'boot' ]; then
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
     "$oscheck"/irecovery -f sshramdisk/iBEC.img4
-
     if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
         "$oscheck"/irecovery -c go
     fi
-    sleep 2
-    "$oscheck"/irecovery -f other/blobsbootlogo.img4
     sleep 1
-    "$oscheck"/irecovery -f other/blobsbootlogo.img4
-    "$oscheck"/irecovery -c 'setpicture 0x0'
+    "$oscheck"/irecovery -f sshramdisk/bootlogo.img4
+    "$oscheck"/irecovery -c "setpicture 0x1"
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
     "$oscheck"/irecovery -c ramdisk
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
@@ -159,6 +156,7 @@ else
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+"$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/bootlogo.img4 -M work/IM4M -A -T rlgo
 
 echo ""
 echo "[*] Cleaning up work directory"
