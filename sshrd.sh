@@ -235,7 +235,9 @@ echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
 echo "[*] uploading logs, if this fails, your ramdisk is still created."
+set +e
 $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+set -e
 echo "[*] done uploading logs!"
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
