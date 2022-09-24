@@ -9,6 +9,9 @@ ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
     rm -rf work
+    echo "[-] uploading logs, if this fails, it's not a big deal."
+    $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+    echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
 }
 
 trap ERR_HANDLER EXIT
