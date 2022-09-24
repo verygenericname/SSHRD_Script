@@ -3,6 +3,7 @@
 set -e
 
 oscheck=$(uname)
+dir=$(pwd)
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
@@ -13,7 +14,9 @@ ERR_HANDLER () {
 trap ERR_HANDLER EXIT
 
 # git submodule update --init --recursive
-gzip -d ramdisk.tar.gz
+if [ "$oscheck" = 'Linux' ]; then
+    gzip -d ramdisk.tar.gz
+fi
 
 if [ ! -e "$oscheck"/gaster ]; then
     curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
@@ -143,7 +146,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil resize -size 210MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
-    "$oscheck"/gtar -x --no-overwrite-dir -f ramdisk.tar.gz -C /tmp/SSHRD/
+    "$oscheck"/gtar -x --no-overwrite-dir -f "$dir"/ramdisk.tar.gz -C /tmp/SSHRD/
 
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
