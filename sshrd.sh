@@ -3,7 +3,6 @@
 set -e
 
 oscheck=$(uname)
-dir=$(pwd)
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
@@ -15,7 +14,7 @@ trap ERR_HANDLER EXIT
 
 # git submodule update --init --recursive
 if [ "$oscheck" = 'Linux' ]; then
-    gzip -d ramdisk.tar.gz
+    gzip -d other/ramdisk.tar.gz
 fi
 
 if [ ! -e "$oscheck"/gaster ]; then
@@ -75,6 +74,10 @@ if [ "$1" = 'boot' ]; then
         "$oscheck"/irecovery -c go
     fi
     sleep 2
+    "$dir"/irecovery -f other/blobsbootlogo.img4
+    sleep 1
+    "$dir"/irecovery -f other/blobsbootlogo.img4
+    "$dir"/irecovery -c 'setpicture 0x0'
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
     "$oscheck"/irecovery -c ramdisk
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
@@ -146,14 +149,14 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil resize -size 210MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
-    "$oscheck"/gtar -x --no-overwrite-dir -f "$dir"/ramdisk.tar.gz -C /tmp/SSHRD/
+    "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
 
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
     "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
 
-    "$oscheck"/hfsplus work/ramdisk.dmg untar ramdisk.tar > /dev/null
+    "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 
