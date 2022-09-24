@@ -230,7 +230,7 @@ else
     fi
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
-"$oscheck"/img4 -i logo/sshrd_logo.im4m -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
+"$oscheck"/img4 -i logo/sshrd_logo.im4p -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
 echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
