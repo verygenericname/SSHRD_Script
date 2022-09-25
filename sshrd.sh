@@ -241,4 +241,4 @@ set -e
 echo "[*] done uploading logs!"
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
-} | tee "$(date +%T)"-"$(uname)"-"$(uname -r)".log
+} | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
