@@ -229,7 +229,8 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
     fi
 fi
-"$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
+python3 -m pyimg4 img4 create -p work/ramdisk.im4p -o sshramdisk/ramdisk.img4 -m work/IM4M
 "$oscheck"/img4 -i logo/sshrd_logo.im4p -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
 echo ""
 echo "[*] Cleaning up work directory"
