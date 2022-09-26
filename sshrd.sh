@@ -14,7 +14,9 @@ trap ERR_HANDLER EXIT
 
 # git submodule update --init --recursive
 if [ "$oscheck" = 'Linux' ]; then
-    gzip -d other/ramdisk.tar.gz
+    if [ -f other/ramdisk.tar.gz ]; then
+        gzip -d other/ramdisk.tar.gz
+    fi
 fi
 
 if [ ! -e "$oscheck"/gaster ]; then
