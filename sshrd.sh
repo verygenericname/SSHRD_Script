@@ -13,11 +13,6 @@ ERR_HANDLER () {
 trap ERR_HANDLER EXIT
 
 # git submodule update --init --recursive
-if [ "$oscheck" = 'Linux' ]; then
-    if [ -f other/ramdisk.tar.gz ]; then
-        gzip -d other/ramdisk.tar.gz
-    fi
-fi
 
 if [ ! -e "$oscheck"/gaster ]; then
     curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
@@ -153,8 +148,13 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
+    if [ "$oscheck" = 'Linux' ]; then
+        if [ -f other/ramdisk.tar.gz ]; then
+            gzip -d other/ramdisk.tar.gz
+        fi
+    fi
+    
     "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
-
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
