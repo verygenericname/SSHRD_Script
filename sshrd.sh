@@ -74,12 +74,12 @@ elif [ "$1" = 'dump-blobs' ]; then
     echo "Validating dumped blobs..."
     if [[ "$($oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket' | cut -d ' ' -f4)" == "GOOD\!" ]]; then
         echo "\033[32m"
-        $oscheck/img4tool --verifyBuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
+        $oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
         $oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'IM4M is valid\|BuildNumber\|\|DeiviceClass\|RestoreBehavior\|Variant\|SHSH2'
         echo "\033[0m "
     elif [[ "$($oscheck/img4tool --verify BuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket' | cut -d ' ' -f4)" == "GOOD\!" ]]; then
         echo "\033[32m"
-        $oscheck/img4tool --verifyBuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
+        $oscheck/img4tool --verify BuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
         $oscheck/img4tool --verify BuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'IM4M is valid\|BuildNumber\|\|DeiviceClass\|RestoreBehavior\|Variant\|SHSH2'
         echo "\033[0m "
     else
