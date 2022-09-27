@@ -58,25 +58,38 @@ elif [ "$1" = 'dump-blobs' ]; then
             read -p "Insert the iOS version (device current version) to validate dumped blobs: " blobsVersion
         done
     fi
+    
     otaBuildID=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$blobsVersion'") | .buildid' --raw-output)
+    ipswURL=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$blobsVersion'") | .url' --raw-output)
     otaURL=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ota" | "$oscheck"/jq '.firmwares | .[] | select(.buildid=="'$otaBuildID'") | .url' --raw-output)
+    
     echo "Downloading $deviceid $blobsVersion OTA BuildManifest.plist..."
-    pzb -g AssetData/boot/BuildManifest.plist $otaURL
+    $oscheck/pzb -g AssetData/boot/BuildManifest.plist $otaURL
     mv BuildManifest.plist BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist
+    
+    echo "Downloading $deviceid $blobsVersion IPSW BuildManifest.plist..."
+    $oscheck/pzb -g BuildManifest.plist $ipswURL
+    mv BuildManifest.plist BuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist
+    
     echo "Validating dumped blobs..."
-    if [[ "$($oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket' | cut -d ' ' -f4)" == "GOOD!" ]]; then
+    if [[ "$($oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket' | cut -d ' ' -f4)" == "GOOD\!" ]]; then
         echo "\033[32m"
         $oscheck/img4tool --verifyBuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
         $oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'IM4M is valid\|BuildNumber\|\|DeiviceClass\|RestoreBehavior\|Variant\|SHSH2'
         echo "\033[0m "
+    elif [[ "$($oscheck/img4tool --verify BuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket' | cut -d ' ' -f4)" == "GOOD\!" ]]; then
+        echo "\033[32m"
+        $oscheck/img4tool --verifyBuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
+        $oscheck/img4tool --verify BuildManifest\_IPSW\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'IM4M is valid\|BuildNumber\|\|DeiviceClass\|RestoreBehavior\|Variant\|SHSH2'
+        echo "\033[0m "
     else
         echo "\033[91m"
-        $oscheck/img4tool --verify BuildManifest\_OTA\_$deviceid\_$blobsVersion\_$otaBuildID.plist -s dumped.shsh | grep 'APTicket'
+        echo "[IMG4TOOL] APTicket is BAD!"
         echo "\033[0m"
     fi
-    read -p "Press any key to continue..." 
-    
+    read -p "Press any key to continue..."   
     exit
+    
 elif [ "$1" = 'ssh' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
