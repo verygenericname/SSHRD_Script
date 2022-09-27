@@ -154,7 +154,7 @@ else
         fi
     fi
     
-    "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
+    "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
