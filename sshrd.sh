@@ -17,6 +17,13 @@ ERR_HANDLER () {
     echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
 }
 
+# Check for pyimg4
+if ! python3 -c 'import pkgutil; exit(not pkgutil.find_loader("pyimg4"))'; then
+    echo '[-] pyimg4 not installed. Press any key to install it, or press ctrl + c to cancel'
+    read -n 1 -s
+    python3 -m pip install pyimg4 > "$out"
+fi
+
 trap ERR_HANDLER EXIT
 
 if [ ! -e sshtars/README.md ]; then
