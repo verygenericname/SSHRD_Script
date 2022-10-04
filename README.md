@@ -54,3 +54,4 @@ Create and boot a SSH ramdisk on checkm8 devices
 - [xerub](https://github.com/xerub) for img4lib and restored_external in the ramdisk
 - [Cryptic](https://github.com/Cryptiiiic) for iBoot64Patcher fork
 - [opa334](https://github.com/opa334) for TrollStore
+- [Nebula](https://github.com/itsnebulalol) for a bunch of QOL fixes to this script
