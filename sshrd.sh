@@ -12,13 +12,6 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
-# Check for pyimg4
-if ! python3 -c 'import pkgutil; exit(not pkgutil.find_loader("pyimg4"))'; then
-    echo '[-] pyimg4 not installed. Press any key to install it, or press ctrl + c to cancel'
-    read -n 1 -s
-    python3 -m pip install pyimg4 > "$out"
-fi
-
 # git submodule update --init --recursive
 
 if [ ! -e "$oscheck"/gaster ]; then
@@ -48,7 +41,6 @@ else
     done
 fi
 
-echo "[*] Getting device info... this may take a second"
 check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
 replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
 deviceid=$("$oscheck"/irecovery -q | grep PRODUCT | sed 's/PRODUCT: //')
@@ -68,8 +60,8 @@ if [ "$1" = 'boot' ]; then
         exit
     fi
 
-    "$oscheck"/gaster pwn > /dev/null
-    "$oscheck"/gaster reset > /dev/null
+    "$oscheck"/gaster pwn
+    "$oscheck"/gaster reset
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
     "$oscheck"/irecovery -f sshramdisk/iBEC.img4
@@ -101,7 +93,7 @@ if [ ! -e work ]; then
     mkdir work
 fi
 
-"$oscheck"/gaster pwn > /dev/null
+"$oscheck"/gaster pwn
 "$oscheck"/img4tool -e -s shsh/"${check}".shsh -m work/IM4M
 
 cd work
@@ -164,10 +156,7 @@ else
     "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 fi
-python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
-python3 -m pyimg4 img4 create -p work/ramdisk.im4p -m work/IM4M -o sshramdisk/ramdisk.img4
+"$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 "$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/bootlogo.img4 -M work/IM4M -A -T rlgo
 
-echo ""
-echo "[*] Cleaning up work directory"
 rm -rf work
