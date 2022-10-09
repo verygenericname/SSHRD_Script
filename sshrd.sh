@@ -75,9 +75,10 @@ else
 fi
 
 echo "[*] Getting device info... this may take a second"
-check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
-replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
-deviceid=$("$oscheck"/irecovery -q | grep PRODUCT | sed 's/PRODUCT: //')
+deviceInfo=$("$oscheck"/irecovery -q)
+deviceCPID=$($deviceInfo | grep CPID | sed 's/CPID: //')
+deviceModel=$($deviceInfo | grep MODEL | sed 's/MODEL: //')
+deviceProduct=$($deviceInfo | grep PRODUCT | sed 's/PRODUCT: //')
 ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$1'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
 
 if [ -e work ]; then
