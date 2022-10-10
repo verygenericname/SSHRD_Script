@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
-{
+# {
 
-$(rm *.log 2> /dev/null)
+# $(rm *.log 2> /dev/null)
 set -e
 oscheck=$(uname)
 
@@ -10,12 +10,12 @@ ERR_HANDLER () {
     echo "[-] An error occurred"
     rm -rf work
 
-    echo "[-] Uploading logs. If this fails, it's not a big deal."
-    for file in *.log; do
-        mv "$file" FAILURE_${file}
-    done
-    $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
-    echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
+   # echo "[-] Uploading logs. If this fails, it's not a big deal."
+   # for file in *.log; do
+   #     mv "$file" FAILURE_${file}
+   # done
+   # $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+   # echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
 }
 
 trap ERR_HANDLER EXIT
@@ -239,16 +239,16 @@ echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
 
-echo "[*] Uploading logs. If this fails, your ramdisk is still created."
-set +e
-for file in *.log; do
-    mv "$file" SUCCESS_${file}
-done
-$(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
-set -e
-echo "[*] Done uploading logs!"
+# echo "[*] Uploading logs. If this fails, your ramdisk is still created."
+# set +e
+# for file in *.log; do
+#    mv "$file" SUCCESS_${file}
+# done
+# $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+# set -e
+# echo "[*] Done uploading logs!"
 
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
 
-} | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
+# } | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
