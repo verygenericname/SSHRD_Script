@@ -31,13 +31,13 @@ if [ -e sshtars/ssh.tar.gz ]; then
         gzip -d sshtars/atvssh.tar.gz
     fi
 fi
-
-if [ ! -e "$oscheck"/gaster ]; then
-    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
-    unzip gaster-"$oscheck".zip
-    mv gaster "$oscheck"/
-    rm -rf gaster gaster-"$oscheck".zip
-fi
+# add downloading back when 0x7ff resolves decryption issue with gaster
+# if [ ! -e "$oscheck"/gaster ]; then
+#    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
+#    unzip gaster-"$oscheck".zip
+#    mv gaster "$oscheck"/
+#    rm -rf gaster gaster-"$oscheck".zip
+# fi
 
 chmod +x "$oscheck"/*
 
