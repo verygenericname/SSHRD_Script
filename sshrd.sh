@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
-{
+# {
 
-$(rm *.log 2> /dev/null)
+# $(rm *.log 2> /dev/null)
 set -e
 oscheck=$(uname)
 
@@ -9,12 +9,13 @@ ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
     rm -rf work
-    echo "[-] uploading logs, if this fails, it's not a big deal."
-    for file in *.log; do
-    mv "$file" FAILURE_${file}
-    done
-    $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
-    echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
+
+   # echo "[-] Uploading logs. If this fails, it's not a big deal."
+   # for file in *.log; do
+   #     mv "$file" FAILURE_${file}
+   # done
+   # $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+   # echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
 }
 
 # Check for pyimg4
@@ -32,9 +33,9 @@ fi
 
 if [ -e sshtars/ssh.tar.gz ]; then
     if [ "$oscheck" = 'Linux' ]; then
-    gzip -d sshtars/ssh.tar.gz
-    gzip -d sshtars/t2ssh.tar.gz
-    gzip -d sshtars/atvssh.tar.gz
+        gzip -d sshtars/ssh.tar.gz
+        gzip -d sshtars/t2ssh.tar.gz
+        gzip -d sshtars/atvssh.tar.gz
     fi
 fi
 
@@ -168,7 +169,7 @@ if [ ! -e work ]; then
 fi
 
 "$oscheck"/gaster pwn > /dev/null
-"$oscheck"/img4tool -e -s shsh/"${check}".shsh -m work/IM4M
+"$oscheck"/img4tool -e -s other/shsh/"${check}".shsh -m work/IM4M
 
 cd work
 ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl"
@@ -241,18 +242,21 @@ else
 fi
 python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
 python3 -m pyimg4 img4 create -p work/ramdisk.im4p -o sshramdisk/ramdisk.img4 -m work/IM4M
-"$oscheck"/img4 -i logo/sshrd_logo.im4p -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
+"$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
 echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work
-echo "[*] uploading logs, if this fails, your ramdisk is still created."
-set +e
-for file in *.log; do
-    mv "$file" SUCCESS_${file}
-    done
-$(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
-set -e
-echo "[*] done uploading logs!"
+
+# echo "[*] Uploading logs. If this fails, your ramdisk is still created."
+# set +e
+# for file in *.log; do
+#    mv "$file" SUCCESS_${file}
+# done
+# $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+# set -e
+# echo "[*] Done uploading logs!"
+
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
-} | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
+
+# } | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
