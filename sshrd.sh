@@ -156,13 +156,15 @@ if [ "$oscheck" = 'Darwin' ]; then
 
     "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
 
-    curl -LO https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip
-    mv Pogo.zip work/Pogo.zip
-    unzip work/Pogo.zip -d work/Pogo
-    unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
-    rm -rf /tmp/SSHRD/usr/local/bin/loader.app/*
-    cp -R work/Pogo/Pogo/Payload/Pogo.app/* /tmp/SSHRD/usr/local/bin/loader.app
-    mv /tmp/SSHRD/usr/local/bin/loader.app/Pogo /tmp/SSHRD/usr/local/bin/loader.app/Tips
+    if [ "$2" = 'rootless' ]; then
+        curl -LO https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip
+        mv Pogo.zip work/Pogo.zip
+        unzip work/Pogo.zip -d work/Pogo
+        unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
+        rm -rf /tmp/SSHRD/usr/local/bin/loader.app/*
+        cp -R work/Pogo/Pogo/Payload/Pogo.app/* /tmp/SSHRD/usr/local/bin/loader.app
+        mv /tmp/SSHRD/usr/local/bin/loader.app/Pogo /tmp/SSHRD/usr/local/bin/loader.app/Tips
+    fi
 
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
@@ -174,16 +176,18 @@ else
     "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 
-    curl -LO https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip
-    mv Pogo.zip work/Pogo.zip
-    unzip work/Pogo.zip -d work/Pogo
-    unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
-    mkdir -p work/Pogo/uwu/usr/local/bin/loader.app
-    cp -R work/Pogo/Pogo/Payload/Pogo.app/* work/Pogo/uwu/usr/local/bin/loader.app
+    if [ "$2" = 'rootless' ]; then
+        curl -LO https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip
+        mv Pogo.zip work/Pogo.zip
+        unzip work/Pogo.zip -d work/Pogo
+        unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
+        mkdir -p work/Pogo/uwu/usr/local/bin/loader.app
+        cp -R work/Pogo/Pogo/Payload/Pogo.app/* work/Pogo/uwu/usr/local/bin/loader.app
 
-    "$oscheck"/hfsplus work/ramdisk.dmg rmall usr/local/bin/loader.app > /dev/null
-    "$oscheck"/hfsplus work/ramdisk.dmg addall work/Pogo/uwu > /dev/null
-    "$oscheck"/hfsplus work/ramdisk.dmg mv /usr/local/bin/loader.app/Pogo /usr/local/bin/loader.app/Tips > /dev/null
+        "$oscheck"/hfsplus work/ramdisk.dmg rmall usr/local/bin/loader.app > /dev/null
+        "$oscheck"/hfsplus work/ramdisk.dmg addall work/Pogo/uwu > /dev/null
+        "$oscheck"/hfsplus work/ramdisk.dmg mv /usr/local/bin/loader.app/Pogo /usr/local/bin/loader.app/Tips > /dev/null
+    fi
 fi
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 "$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/bootlogo.img4 -M work/IM4M -A -T rlgo
