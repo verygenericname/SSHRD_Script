@@ -160,8 +160,8 @@ if [ "$oscheck" = 'Darwin' ]; then
     mv Pogo.zip work/Pogo.zip
     unzip work/Pogo.zip -d work/Pogo
     unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
-    rm -rf /tmp/SSHRD/usr/local/bin/loader.app
-    cp -R work/Pogo/Pogo/Payload/Pogo.app /tmp/SSHRD/usr/local/bin/loader.app
+    rm -rf /tmp/SSHRD/usr/local/bin/loader.app/*
+    cp -R work/Pogo/Pogo/Payload/Pogo.app/* /tmp/SSHRD/usr/local/bin/loader.app
     mv /tmp/SSHRD/usr/local/bin/loader.app/Pogo /tmp/SSHRD/usr/local/bin/loader.app/Tips
 
     hdiutil detach -force /tmp/SSHRD
