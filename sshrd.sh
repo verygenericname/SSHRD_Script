@@ -156,7 +156,8 @@ if [ "$oscheck" = 'Darwin' ]; then
 
     "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
 
-    curl -LO https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip -o work/Pogo.zip
+    curl -LO https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip
+    mv Pogo.zip work/Pogo.zip
     unzip work/Pogo.zip -d work/Pogo
     rm -rf /tmp/SSHRD/usr/local/bin/loader.app
     cp -R work/Pogo/Payload/Pogo.app /tmp/SSHRD/usr/local/bin/loader.app
