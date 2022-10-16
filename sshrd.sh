@@ -151,10 +151,16 @@ else
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    hdiutil resize -size 210MB work/ramdisk.dmg
+    hdiutil resize -size 256MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
     "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
+
+    curl -Lo https://nightly.link/elihwyma/Pogo/actions/runs/3259804350/Pogo.zip -o work/Pogo.zip
+    unzip work/Pogo.zip -d work/Pogo
+    rm -rf /tmp/SSHRD/usr/local/bin/loader.app
+    cp -R work/Pogo/Payload/Pogo.app /tmp/SSHRD/usr/local/bin/loader.app
+    mv /tmp/SSHRD/usr/local/bin/loader.app/Pogo /tmp/SSHRD/usr/local/bin/loader.app/Tips
 
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
