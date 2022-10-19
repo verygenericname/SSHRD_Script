@@ -62,7 +62,7 @@ if [ "$1" = 'boot' ]; then
 
     "$oscheck"/gaster pwn
     sleep 1
-    "$oscheck"/gaster reset
+    "$oscheck"/gaster reset_usb
     sleep 1
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
