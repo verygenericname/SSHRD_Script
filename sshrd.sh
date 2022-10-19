@@ -96,7 +96,7 @@ if [ "$1" = 'reset' ]; then
     fi
 
     "$oscheck"/gaster pwn > /dev/null
-    "$oscheck"/gaster reset > /dev/null
+    "$oscheck"/gaster reset_usb > /dev/null
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
     "$oscheck"/irecovery -f sshramdisk/iBEC.img4
@@ -128,7 +128,7 @@ if [ "$1" = 'boot' ]; then
     fi
 
     "$oscheck"/gaster pwn > /dev/null
-    "$oscheck"/gaster reset > /dev/null
+    "$oscheck"/gaster reset_usb > /dev/null
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
     "$oscheck"/irecovery -f sshramdisk/iBEC.img4
