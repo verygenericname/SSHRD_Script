@@ -15,7 +15,7 @@ trap ERR_HANDLER EXIT
 # git submodule update --init --recursive
 
 if [ ! -e "$oscheck"/gaster ]; then
-    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
+    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck".zip
     unzip gaster-"$oscheck".zip
     mv gaster "$oscheck"/
     rm -rf gaster gaster-"$oscheck".zip
@@ -62,7 +62,7 @@ if [ "$1" = 'boot' ]; then
 
     "$oscheck"/gaster pwn
     sleep 1
-    "$oscheck"/gaster reset_usb
+    "$oscheck"/gaster reset
     sleep 1
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
