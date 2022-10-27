@@ -35,9 +35,12 @@ Create and boot a SSH ramdisk on checkm8 devices
 7. Have fun!
 
 # Linux notes
-- you may have to run sudo systemctl stop usbmuxd
-- then run sudo usbmuxd -p -f
-- then ssh will work
+
+On Linux, usbmuxd will have to be restarted. On most distros, it's as simple as these 2 commands in another terminal:
+```
+sudo systemctl stop usbmuxd
+sudo usbmuxd -p -f
+```
 
 # Other commands
 
@@ -50,6 +53,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 - [Reddit Post](https://www.reddit.com/r/jailbreak/comments/wgiye1/free_release_ssh_ramdisk_creator_for_iphones_ipad/)
 
 # Credits
+
 - [tihmstar](https://github.com/tihmstar) for pzb/original iBoot64Patcher/img4tool
 - [xerub](https://github.com/xerub) for img4lib and restored_external in the ramdisk
 - [Cryptic](https://github.com/Cryptiiiic) for iBoot64Patcher fork
