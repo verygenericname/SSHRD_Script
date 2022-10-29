@@ -35,6 +35,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 6. Finally, to mount the filesystems, run `mount_filesystems`  
     - /var is mounted to /mnt2 in the ssh session.
     - /private/preboot is mounted to /mnt6.
+    - DO NOT RUN THIS IF THE DEVICE IS ON A REALLY OLD VERSION!!!!!!!
 7. Have fun!
 
 # Linux notes
