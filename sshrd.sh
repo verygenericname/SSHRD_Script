@@ -52,6 +52,11 @@ elif [ "$1" = 'dump-blobs' ]; then
     killall iproxy
     echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
     exit
+elif [ "$1" = 'reboot' ]; then
+    "$oscheck"/iproxy 2222 22 &>/dev/null &
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "reboot"
+    echo "[*] Device should now reboot"
+    exit
 elif [ "$1" = 'ssh' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
