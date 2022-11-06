@@ -54,7 +54,7 @@ elif [ "$1" = 'dump-blobs' ]; then
     exit
 elif [ "$1" = 'reboot' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
-    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "reboot"
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "/sbin/reboot"
     echo "[*] Device should now reboot"
     exit
 elif [ "$1" = 'ssh' ]; then
