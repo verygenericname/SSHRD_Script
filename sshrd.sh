@@ -214,7 +214,7 @@ fi
 if [ "$oscheck" = 'Darwin' ]; then
     if [[ $(bc -l <<< "$1 >= 16.1") -eq 1 ]]; then
         echo "iOS 16+ requested"
-        sleep 5
+
         # hdiutil resize doesn't work on APFS DMGs, so we have to make a new (bigger) one and copy everything over
         hdiutil create -fs apfs -size 210m work/temp
         
