@@ -212,7 +212,35 @@ else
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    hdiutil resize -size 210MB work/ramdisk.dmg
+    if [[ $(bc -l <<< "$1 >= 16.1") -eq 1 ]]; then
+        echo "iOS 16+ requested"
+        sleep 5
+        # hdiutil resize doesn't work on APFS DMGs, so we have to make a new (bigger) one and copy everything over
+        hdiutil create -fs apfs -size 210m work/temp
+        
+        ourmountpoint=`hdiutil attach work/temp.dmg | head -n 1 | awk '{print $1;}'`
+
+        echo "Mountpoint detected as $ourmountpoint"
+        # Sanity check before we run dd
+        if [[ "$ourmountpoint" == *"/dev/disk"* ]]; then
+            diskutil unmountDisk $ourmountpoint
+            dd if=work/ramdisk.dmg of=$ourmountpoint bs=1m
+
+            diskutil apfs resizeContainer $ourmountpoint 210m
+
+            # Exit if resize fails
+            [ $? -ne 0 ] && echo "Failed to resize container" && exit
+
+            # Now we have a bigger ramdisk, eject and replace
+            diskutil eject $ourmountpoint
+            mv work/temp.dmg work/ramdisk.dmg
+        else
+            echo "Unable to mount temporary DMG"
+            exit
+        fi
+    else
+        hdiutil resize -size 210MB work/ramdisk.dmg
+    fi
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
     if [ "$replace" = 'j42dap' ]; then
@@ -223,7 +251,6 @@ if [ "$oscheck" = 'Darwin' ]; then
     else
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar.gz -C /tmp/SSHRD/
     fi
-
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
