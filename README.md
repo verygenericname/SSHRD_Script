@@ -48,8 +48,8 @@ sudo usbmuxd -p -f
 # Other commands
 
 - Reboot your device: `./sshrd.sh reboot`
-- Erase all data from your device: `./sshrd.sh `
-- Dump onboard blobs: `./sshrd.sh dump-blobs`
+- Erase all data from your device: `./sshrd.sh reset`
+- Dump onboard SHSH blobs: `./sshrd.sh dump-blobs`
 - Delete old SSH ramdisk: `./sshrd.sh clean`
 
 # Other Stuff
