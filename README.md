@@ -1,5 +1,4 @@
 <h1 align="center">SSH Ramdisk Script</h1>
-
 <p align="center">
   <a href="https://github.com/verygenericname/SSHRD_Script/graphs/contributors" target="_blank">
     <img src="https://img.shields.io/github/contributors/verygenericname/SSHRD_Script.svg" alt="Contributors">
@@ -18,7 +17,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 # Prerequsites
 
 1. A computer running macOS/linux
-2. A checkm8 device (A7-A11)
+2. A checkm8 device (A7-A11) NOTE: iPhone 6 and below cannot have filesystems mounted for unknown reasons.
 
 # Usage
 
@@ -49,8 +48,8 @@ sudo usbmuxd -p -f
 # Other commands
 
 - Reboot your device: `./sshrd.sh reboot`
-- Reset your device: `./sshrd.sh reset`
-- Dump onboard blobs: `./sshrd.sh dump-blobs`
+- Erase all data from your device: `./sshrd.sh reset`
+- Dump onboard SHSH blobs: `./sshrd.sh dump-blobs`
 - Delete old SSH ramdisk: `./sshrd.sh clean`
 
 # Other Stuff
