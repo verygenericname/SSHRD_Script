@@ -92,7 +92,6 @@ if [ "$1" = 'boot' ]; then
     sleep 1
     "$oscheck"/irecovery -c bootx
 
-    echo "[*] Device should now show text on screen"
     exit
 fi
 
