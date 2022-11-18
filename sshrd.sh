@@ -12,6 +12,13 @@ ERR_HANDLER () {
 
 trap ERR_HANDLER EXIT
 
+# Check for pyimg4
+if ! python3 -c 'import pkgutil; exit(not pkgutil.find_loader("pyimg4"))'; then
+    echo '[-] pyimg4 not installed. Press any key to install it, or press ctrl + c to cancel'
+    read -n 1 -s
+    python3 -m pip install pyimg4
+fi
+
 # git submodule update --init --recursive
 
 if [ ! -e "$oscheck"/gaster ]; then
@@ -188,7 +195,8 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg mv /usr/local/bin/loader.app/Pogo /usr/local/bin/loader.app/Tips > /dev/null
     fi
 fi
-"$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
+python3 -m pyimg4 img4 create -p work/ramdisk.im4p -m work/IM4M -o sshramdisk/ramdisk.img4
 "$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/bootlogo.img4 -M work/IM4M -A -T rlgo
 
 rm -rf work
