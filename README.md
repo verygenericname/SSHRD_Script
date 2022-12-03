@@ -63,3 +63,4 @@ sudo usbmuxd -p -f
 - [Cryptic](https://github.com/Cryptiiiic) for iBoot64Patcher fork
 - [opa334](https://github.com/opa334) for TrollStore
 - [Nebula](https://github.com/itsnebulalol) for a bunch of QOL fixes to this script
+- [OpenAI](https://chat.openai.com/chat) for converting [kerneldiff](https://github.com/mcg29/kerneldiff) into [C](https://github.com/verygenericname/kerneldiff_C)
