@@ -80,7 +80,7 @@ else
     done
 fi
 
-echo "[*] Getting device info... this may take a second"
+echo "[*] Getting device info and pwning... this may take a second"
 check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
 replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
 deviceid=$("$oscheck"/irecovery -q | grep PRODUCT | sed 's/PRODUCT: //')
