@@ -196,7 +196,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil resize -sectors min work/ramdisk.dmg
 else
     if [ -f other/ramdisk.tar.gz ]; then
-        gzip -d other/ramdisk.tar.gz
+        gzip -k -d other/ramdisk.tar.gz
     fi
 
     "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
