@@ -48,10 +48,12 @@ if [ "$1" = 'clean' ]; then
 elif [ "$1" = 'dump-blobs' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
     version=$("$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "sw_vers -productVersion")
-    case $version in
-        16.*) device=rdisk2;;
-        *) device=rdisk1;;
-    esac
+    version=${version%%.*}
+    if [ "$version" -ge 16 ]; then
+        device=rdisk2
+    else
+        device=rdisk1
+    fi
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/$device" | dd of=dump.raw bs=256 count=$((0x4000))
     "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
     killall iproxy
