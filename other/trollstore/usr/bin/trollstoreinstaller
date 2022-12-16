@@ -1,0 +1,309 @@
+set -e
+
+if [ -e /mnt2/mobile ]; then
+    :
+else
+echo "you didn't run mount_filesystems! Or it failed. If so report an issue to SSHRD_Script."
+exit
+fi
+
+if [ "$1" = "Tips" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Tips.app")
+mv ${app}/Tips ${app}/Tips_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Tips
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Tips
+chmod 755 ${app}/Tips ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Books" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Books.app")
+mv ${app}/Books ${app}/Books_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Books
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Books
+chmod 755 ${app}/Books ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "VoiceMemos" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "VoiceMemos.app")
+mv ${app}/VoiceMemos ${app}/VoiceMemos_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/VoiceMemos
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/VoiceMemos
+chmod 755 ${app}/VoiceMemos ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Weather" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Weather.app")
+mv ${app}/Weather ${app}/Weather_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Weather
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Weather
+chmod 755 ${app}/Weather ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Files" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Files.app")
+mv ${app}/Files ${app}/Files_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Files
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Files
+chmod 755 ${app}/Files ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Mail" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "MobileMail.app")
+mv ${app}/MobileMail ${app}/MobileMail_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/MobileMail
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/MobileMail
+chmod 755 ${app}/MobileMail ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Home" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Home.app")
+mv ${app}/Home ${app}/Home_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Home
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Home
+chmod 755 ${app}/Home ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Calculator" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Calculator.app")
+mv ${app}/Calculator ${app}/Calculator_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Calculator
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Calculator
+chmod 755 ${app}/Calculator ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Stocks" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Stocks.app")
+mv ${app}/Stocks ${app}/Stocks_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Stocks
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Stocks
+chmod 755 ${app}/Stocks ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Maps" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Maps.app")
+mv ${app}/Maps ${app}/Maps_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Maps
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Maps
+chmod 755 ${app}/Maps ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Measure" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Measure.app")
+mv ${app}/Measure ${app}/Measure_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Measure
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Measure
+chmod 755 ${app}/Measure ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Translate" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "SequoiaTranslator.app")
+mv ${app}/SequoiaTranslator ${app}/SequoiaTranslator_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/SequoiaTranslator
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/SequoiaTranslator
+chmod 755 ${app}/SequoiaTranslator ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "FaceTime" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "FaceTime.app")
+mv ${app}/FaceTime ${app}/FaceTime_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/FaceTime
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/FaceTime
+chmod 755 ${app}/FaceTime ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Contacts" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Contacts.app")
+mv ${app}/Contacts ${app}/Contacts_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Contacts
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Contacts
+chmod 755 ${app}/Contacts ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Magnifier" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Magnifier.app")
+mv ${app}/Magnifier ${app}/Magnifier_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Magnifier
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Magnifier
+chmod 755 ${app}/Magnifier ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "iTunes" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "MobileStore.app")
+mv ${app}/MobileStore ${app}/MobileStore_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/MobileStore
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/MobileStore
+chmod 755 ${app}/MobileStore ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Shortcuts" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Shortcuts.app")
+mv ${app}/Shortcuts ${app}/Shortcuts_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Shortcuts
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Shortcuts
+chmod 755 ${app}/Shortcuts ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "TV" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "AppleTV.app")
+mv ${app}/AppleTV ${app}/AppleTV_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/AppleTV
+cp /usr/trollstore/trollstorehelper $app
+/usr/sbin/chown 33 ${app}/AppleTV
+/bin/chmod 755 ${app}/AppleTV ${app}/trollstorehelper
+/usr/sbin/chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Music" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Music.app")
+mv ${app}/Music ${app}/Music_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Music
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Music
+chmod 755 ${app}/Music ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Notes" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "MobileNotes.app")
+mv ${app}/MobileNotes ${app}/MobileNotes_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/MobileNotes
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/MobileNotes
+chmod 755 ${app}/MobileNotes ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Calendar" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "MobileCal.app")
+mv ${app}/MobileCal ${app}/MobileCal_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/MobileCal
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/MobileCal
+chmod 755 ${app}/MobileCal ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Reminders" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Reminders.app")
+mv ${app}/Reminders ${app}/Reminders_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Reminders
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Reminders
+chmod 755 ${app}/Reminders ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+if [ "$1" = "Podcasts" ]; then
+app=$(find /mnt2/containers/Bundle/Application/ -name "Podcasts.app")
+mv ${app}/Podcasts ${app}/Podcasts_TROLLSTORE_BACKUP
+cp /usr/trollstore/PersistenceHelper ${app}/Podcasts
+cp /usr/trollstore/trollstorehelper $app
+chown 33 ${app}/Podcasts
+chmod 755 ${app}/Podcasts ${app}/trollstorehelper
+chown 0 ${app}/trollstorehelper
+touch ${app}/.TrollStorePersistenceHelper
+echo "done"
+exit
+fi
+
+echo "not a uninstallable system app?"
