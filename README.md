@@ -22,7 +22,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 1. A computer running macOS/linux
 2. A checkm8 device (A7-A11)
 
---Warning
+# Warning
 
 I AM NOT responsible for any data loss. The user of this program accepts responsibility should something happen to their device. While nothing should happen, jailbreaking has risks in itself. If your device is stuck in recovery, please run one of the following:
 futurerestore --exit-recovery
