@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -51,7 +51,6 @@ fi
 check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
 replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
 deviceid=$("$oscheck"/irecovery -q | grep PRODUCT | sed 's/PRODUCT: //')
-ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$1'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
 
 if [ -e work ]; then
     rm -rf work
@@ -111,6 +110,27 @@ if [ ! -e work ]; then
     mkdir work
 fi
 
+if [[ "$deviceid" == *"iPad"* ]] && [[ "$1" == *"16"* ]]; then
+    ipswurl=$(curl -sL https://api.appledb.dev/ios/iPadOS\;20A5349b.json | "$oscheck"/jq -r .devices\[\"$deviceid\"\].ipsw)
+else
+    if [[ "$deviceid" == *"iPad"* ]]; then
+        device_os=iPadOS
+        device=iPad
+    elif [[ "$deviceid" == *"iPod"* ]]; then
+        device_os=iOS
+        device=iPod
+    else
+        device_os=iOS
+        device=iPhone
+    fi
+
+    buildid=$(curl -sL https://api.ipsw.me/v4/ipsw/$1 | "$oscheck"/jq '[.[] | select(.identifier | startswith("'$device'")) | .buildid][0]' --raw-output)
+    if [ "$buildid" == "19B75" ]; then
+        buildid=19B74
+    fi
+    ipswurl=$(curl -sL https://api.appledb.dev/ios/$device_os\;$buildid.json | "$oscheck"/jq -r .devices\[\"$deviceid\"\].ipsw)
+fi
+
 "$oscheck"/gaster pwn
 "$oscheck"/img4tool -e -s shsh/"${check}".shsh -m work/IM4M
 
@@ -139,7 +159,7 @@ cd ..
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
 "$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
 "$oscheck"/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
-"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e wdt=-1 -v `if [ -z "$2" ]; then :; else echo "$2=$3"; fi` `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "-restore"; fi`" -n
+"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e wdt=-1 serial=3 -v `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "-restore"; fi`" -n
 "$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
 
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
@@ -159,23 +179,43 @@ fi
 if [ "$oscheck" = 'Darwin' ]; then
     hdiutil resize -size 258MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
-    
-    "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
-    cp -rv other/rsync/rsync /tmp/SSHRD/usr/bin/
-    cp -rv other/rsync/etc/ /tmp/SSHRD/
+
     cp -rv other/trollstore/ /tmp/SSHRD/
-    sleep 1
-    
+    "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
+
+    #if [ ! "$2" = 'rootless' ]; then
+    #    curl -LO https://nightly.link/elihwyma/Pogo/workflows/build/root/Pogo.zip
+    #    mv Pogo.zip work/Pogo.zip
+    #    unzip work/Pogo.zip -d work/Pogo
+    #    unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
+    #    rm -rf /tmp/SSHRD/usr/local/bin/loader.app/*
+    #    cp -R work/Pogo/Pogo/Payload/Pogo.app/* /tmp/SSHRD/usr/local/bin/loader.app
+    #    mv /tmp/SSHRD/usr/local/bin/loader.app/Pogo /tmp/SSHRD/usr/local/bin/loader.app/Tips
+    #fi
+
     hdiutil detach -force /tmp/SSHRD
     hdiutil resize -sectors min work/ramdisk.dmg
 else
     if [ -f other/ramdisk.tar.gz ]; then
-        gzip -d other/ramdisk.tar.gz
+        gzip -f -k -d other/ramdisk.tar.gz
     fi
 
     "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
     "$oscheck"/hfsplus work/ramdisk.dmg addall other/trollstore > /dev/null
+
+    #if [ ! "$2" = 'rootless' ]; then
+    #    curl -LO https://nightly.link/elihwyma/Pogo/workflows/build/root/Pogo.zip
+    #    mv Pogo.zip work/Pogo.zip
+    #    unzip work/Pogo.zip -d work/Pogo
+    #    unzip work/Pogo/Pogo.ipa -d work/Pogo/Pogo
+    #    mkdir -p work/Pogo/uwu/usr/local/bin/loader.app
+    #    cp -R work/Pogo/Pogo/Payload/Pogo.app/* work/Pogo/uwu/usr/local/bin/loader.app
+
+    #    "$oscheck"/hfsplus work/ramdisk.dmg rmall usr/local/bin/loader.app > /dev/null
+    #    "$oscheck"/hfsplus work/ramdisk.dmg addall work/Pogo/uwu > /dev/null
+    #    "$oscheck"/hfsplus work/ramdisk.dmg mv /usr/local/bin/loader.app/Pogo /usr/local/bin/loader.app/Tips > /dev/null
+    #fi
 fi
 python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
 python3 -m pyimg4 img4 create -p work/ramdisk.im4p -m work/IM4M -o sshramdisk/ramdisk.img4
