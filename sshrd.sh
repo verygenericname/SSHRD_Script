@@ -22,7 +22,7 @@ fi
 # git submodule update --init --recursive
 
 if [ ! -e "$oscheck"/gaster ]; then
-    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck".zip
+    curl -sLO https://static.palera.in/deps/gaster-"$os".zip
     unzip gaster-"$oscheck".zip
     mv gaster "$oscheck"/
     rm -rf gaster gaster-"$oscheck".zip
