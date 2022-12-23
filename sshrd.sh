@@ -21,11 +21,11 @@ fi
 
 # git submodule update --init --recursive
 
-if [ ! -e "$oscheck"/gaster ]; then
+if [ ! -e "$dir"/gaster ]; then
     curl -sLO https://static.palera.in/deps/gaster-"$os".zip
-    unzip gaster-"$oscheck".zip
-    mv gaster "$oscheck"/
-    rm -rf gaster gaster-"$oscheck".zip
+    unzip gaster-"$os".zip
+    mv gaster "$dir"/
+    rm -rf gaster gaster-"$os".zip
 fi
 
 chmod +x "$oscheck"/*
