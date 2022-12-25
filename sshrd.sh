@@ -47,7 +47,14 @@ if [ "$1" = 'clean' ]; then
     exit
 elif [ "$1" = 'dump-blobs' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
-    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/rdisk1" | dd of=dump.raw bs=256 count=$((0x4000))
+    version=$("$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "sw_vers -productVersion")
+    version=${version%%.*}
+    if [ "$version" -ge 16 ]; then
+        device=rdisk2
+    else
+        device=rdisk1
+    fi
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/$device" | dd of=dump.raw bs=256 count=$((0x4000))
     "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
     killall iproxy
     echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
