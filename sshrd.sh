@@ -78,9 +78,9 @@ if [ "$1" = 'boot' ]; then
         "$oscheck"/irecovery -c go
     fi
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/bootlogo.img4
+    #"$oscheck"/irecovery -f sshramdisk/bootlogo.img4
     #sleep 1
-    "$oscheck"/irecovery -c "setpicture 0x1"
+    #"$oscheck"/irecovery -c "setpicture 0x1"
     #sleep 1
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
     sleep 1
