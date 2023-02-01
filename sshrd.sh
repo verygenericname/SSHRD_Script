@@ -78,10 +78,10 @@ if [ "$1" = 'boot' ]; then
         "$oscheck"/irecovery -c go
     fi
     sleep 1
-    #"$oscheck"/irecovery -f sshramdisk/bootlogo.img4
-    #sleep 1
-    #"$oscheck"/irecovery -c "setpicture 0x1"
-    #sleep 1
+    "$oscheck"/irecovery -f sshramdisk/bootlogo.img4
+    sleep 1
+    "$oscheck"/irecovery -c "setpicture 0x1"
+    sleep 1
     "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
     sleep 1
     "$oscheck"/irecovery -c ramdisk
@@ -159,7 +159,7 @@ cd ..
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
 "$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
 "$oscheck"/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
-"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e wdt=-1 serial=3 -v `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "-restore"; fi`" -n
+"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1 `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "-restore"; fi`" -n
 "$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
 
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
