@@ -69,7 +69,7 @@ elif [ "$1" = 'ssh' ]; then
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
     killall iproxy
     exit
-elif [ "$1" = 'ssh' ]; then
+elif [ "$1" = 'nvram' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost <<'ENDSSH'
     nvram -c
