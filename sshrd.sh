@@ -69,6 +69,13 @@ elif [ "$1" = 'ssh' ]; then
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
     killall iproxy
     exit
+elif [ "$1" = 'ssh' ]; then
+    "$oscheck"/iproxy 2222 22 &>/dev/null &
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost <<'ENDSSH'
+    nvram -c
+    ENDSSH
+    killall iproxy
+    exit
 elif [ "$oscheck" = 'Darwin' ]; then
     if ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); then
         echo "[*] Waiting for device in DFU mode"
