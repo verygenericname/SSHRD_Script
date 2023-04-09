@@ -17,7 +17,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 # Prerequsites
 
 1. A computer running macOS/linux
-2. A checkm8 device (A7-A11) NOTE: iPhone 6 and below cannot have filesystems mounted for unknown reasons.
+2. A checkm8 device (A7-A11)
 
 # Usage
 
