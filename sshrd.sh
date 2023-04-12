@@ -2,6 +2,8 @@
 
 set -e
 
+mkdir -p boot/
+
 oscheck=$(uname)
 
 ERR_HANDLER () {
@@ -50,12 +52,9 @@ if [ -e work ]; then
     rm -rf work
 fi
 
-if [ ! -e sshramdisk ]; then
-    mkdir sshramdisk
-fi
 
 if [ "$1" = 'boot' ]; then
-    if [ ! -e sshramdisk/iBSS.img4 ]; then
+    if [ ! -e boot/${deviceid}/iBSS.img4 ]; then
         echo "[-] Please create an SSH ramdisk first!"
         exit
     fi
@@ -64,34 +63,43 @@ if [ "$1" = 'boot' ]; then
     sleep 1
     "$oscheck"/gaster reset
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/iBSS.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/iBSS.img4
     sleep 2
-    "$oscheck"/irecovery -f sshramdisk/iBEC.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/iBEC.img4
     if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
         sleep 1
         "$oscheck"/irecovery -c go
     fi
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/bootlogo.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/bootlogo.img4
     sleep 1
     "$oscheck"/irecovery -c "setpicture 0x1"
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/ramdisk.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/ramdisk.img4
     sleep 1
     "$oscheck"/irecovery -c ramdisk
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/devicetree.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/devicetree.img4
     sleep 1
     "$oscheck"/irecovery -c devicetree
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/trustcache.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/trustcache.img4
     sleep 1
     "$oscheck"/irecovery -c firmware
     sleep 1
-    "$oscheck"/irecovery -f sshramdisk/kernelcache.img4
+    "$oscheck"/irecovery -f boot/${deviceid}/kernelcache.img4
     sleep 1
     "$oscheck"/irecovery -c bootx
 
+    exit
+fi
+
+if [ ! -e boot/${deviceid} ]; then
+    mkdir boot/${deviceid}
+fi
+
+if [ -e boot/${deviceid}/iBSS.img4 ]; then
+    echo "[-] Ramdisk is already created so SKIPPING ..."
     exit
 fi
 
@@ -109,21 +117,13 @@ if [[ "$deviceid" == *"iPad"* ]] && [[ "$1" == *"16"* ]]; then
 else
     if [[ "$deviceid" == *"iPad"* ]]; then
         device_os=iPadOS
-        device=iPad
     elif [[ "$deviceid" == *"iPod"* ]]; then
         device_os=iOS
-        device=iPod
     else
         device_os=iOS
-        device=iPhone
     fi
 
-
-    buildid=$(curl -sL https://api.ipsw.me/v4/ipsw/$1 | "$oscheck"/jq '[.[] | select(.identifier | startswith("'$device'")) | .buildid][0]' --raw-output)
-    if [ "$buildid" == "19B75" ]; then
-        buildid=19B74
-    fi
-    ipswurl=$(curl -sL https://api.appledb.dev/ios/$device_os\;$buildid.json | "$oscheck"/jq -r .devices\[\"$deviceid\"\].ipsw)
+    ipswurl=$(curl -sL https://api.appledb.dev/main.json | "$oscheck"/jq -r '.ios[] | select(.version == "'$1'") | select(.osStr == "'$device_os'").devices["'$deviceid'"].ipsw')
 fi
 
 "$oscheck"/gaster pwn
@@ -153,21 +153,21 @@ cd ..
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBSS.dec
 "$oscheck"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
 "$oscheck"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
-"$oscheck"/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
-"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1 `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "nand-enable-reformat=1  -restore"; fi`" -n
-"$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
+"$oscheck"/img4 -i work/iBSS.patched -o boot/${deviceid}/iBSS.img4 -M work/IM4M -A -T ibss
+"$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1 `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "nand-enable-reformat=1 -restore"; fi`" -n
+"$oscheck"/img4 -i work/iBEC.patched -o boot/${deviceid}/iBEC.img4 -M work/IM4M -A -T ibec
 
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
 "$oscheck"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
 "$oscheck"/kerneldiff work/kcache.raw work/kcache.patched work/kc.bpatch
-"$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [ "$oscheck" = 'Linux' ]; then echo "-J"; fi`
-"$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
+"$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o boot/${deviceid}/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [ "$oscheck" = 'Linux' ]; then echo "-J"; fi`
+"$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o boot/${deviceid}/devicetree.img4 -M work/IM4M -T rdtr
 
 if [ "$oscheck" = 'Darwin' ]; then
-    "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
+    "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o boot/${deviceid}/trustcache.img4 -M work/IM4M -T rtsc
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
-    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
+    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o boot/${deviceid}/trustcache.img4 -M work/IM4M -T rtsc
     "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
 
@@ -213,7 +213,7 @@ else
     #fi
 fi
 python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
-python3 -m pyimg4 img4 create -p work/ramdisk.im4p -m work/IM4M -o sshramdisk/ramdisk.img4
-"$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/bootlogo.img4 -M work/IM4M -A -T rlgo
+python3 -m pyimg4 img4 create -p work/ramdisk.im4p -m work/IM4M -o boot/${deviceid}/ramdisk.img4
+"$oscheck"/img4 -i other/bootlogo.im4p -o boot/${deviceid}/bootlogo.img4 -M work/IM4M -A -T rlgo
 
 rm -rf work
