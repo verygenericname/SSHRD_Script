@@ -259,6 +259,21 @@ if [ "$oscheck" = 'Darwin' ]; then
         hdiutil resize -sectors min work/ramdisk.dmg
     fi
 else
+    version="$1"
+
+    major=$(echo "$version" | awk -F. '{print $1}')
+    minor=$(echo "$version" | awk -F. '{print $2}')
+    patch=$(echo "$version" | awk -F. '{print $3}')
+    major=${major:-0}
+    minor=${minor:-0}
+    patch=${patch:-0}
+
+    if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+        echo "Sorry, 16.1 and above doesn't work on Linux at the moment!"
+        exit
+        else
+        :
+        fi
     "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
 
     if [ "$replace" = 'j42dap' ]; then
