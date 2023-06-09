@@ -205,7 +205,7 @@ cd ..
 "$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
 
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
-"$oscheck"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
+"$oscheck"/KPlooshFinder work/kcache.raw work/kcache.patched
 "$oscheck"/kerneldiff work/kcache.raw work/kcache.patched work/kc.bpatch
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [ "$oscheck" = 'Linux' ]; then echo "-J"; fi`
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
@@ -219,9 +219,30 @@ else
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    hdiutil resize -size 210MB work/ramdisk.dmg
-    hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
+    version="$1"
 
+    major=$(echo "$version" | awk -F. '{print $1}')
+    minor=$(echo "$version" | awk -F. '{print $2}')
+    patch=$(echo "$version" | awk -F. '{print $3}')
+    major=${major:-0}
+    minor=${minor:-0}
+    patch=${patch:-0}
+
+    if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    :
+    else
+        hdiutil resize -size 210MB work/ramdisk.dmg
+    fi
+    hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
+    
+    if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+        hdiutil create -size 210m -imagekey diskimage-class=CRawDiskImage -format UDIF -fs APFS -layout NONE -srcfolder /tmp/SSHRD -copyuid root work/ramdisk1.dmg # tmp
+        hdiutil detach -force /tmp/SSHRD
+        hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk1.dmg
+    else
+    :
+    fi
+    
     if [ "$replace" = 'j42dap' ]; then
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/atvssh.tar.gz -C /tmp/SSHRD/
     elif [ "$check" = '0x8012' ]; then
@@ -232,7 +253,11 @@ if [ "$oscheck" = 'Darwin' ]; then
     fi
 
     hdiutil detach -force /tmp/SSHRD
-    hdiutil resize -sectors min work/ramdisk.dmg
+    if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+        printf not
+    else
+        hdiutil resize -sectors min work/ramdisk.dmg
+    fi
 else
     "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
 
@@ -245,7 +270,11 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
     fi
 fi
+if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+"$oscheck"/img4 -i work/ramdisk1.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+else
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+fi
 "$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
 echo ""
 echo "[*] Cleaning up work directory"
