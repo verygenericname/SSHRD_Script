@@ -270,8 +270,12 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
     fi
 fi
+if [ "$oscheck" = 'Darwin' ]; then
 if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
 "$oscheck"/img4 -i work/ramdisk1.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+else
+"$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
+fi
 else
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 fi
