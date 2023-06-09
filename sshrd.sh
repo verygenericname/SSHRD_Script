@@ -254,7 +254,7 @@ if [ "$oscheck" = 'Darwin' ]; then
 
     hdiutil detach -force /tmp/SSHRD
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
-        printf not
+        :
     else
         hdiutil resize -sectors min work/ramdisk.dmg
     fi
