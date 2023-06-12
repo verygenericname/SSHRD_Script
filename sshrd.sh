@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # {
-
+set -o xtrace
 # $(rm *.log 2> /dev/null)
 set -e
 oscheck=$(uname)
@@ -207,13 +207,13 @@ cd work
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
 
 if [ "$oscheck" = 'Darwin' ]; then
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
     ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
     else
     :
     fi
 else
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
     ../"$oscheck"/pzb -g Firmware/"$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache "$ipswurl"
     else
     :
@@ -243,14 +243,14 @@ cd ..
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
 
 if [ "$oscheck" = 'Darwin' ]; then
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
         else
         :
     fi
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
     "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
     else
     :
@@ -280,7 +280,7 @@ if [ "$oscheck" = 'Darwin' ]; then
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/t2ssh.tar.gz -C /tmp/SSHRD/
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
-        if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
         :
         else
         mkdir 12rd
@@ -319,7 +319,7 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
-        if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
         :
         else
         mkdir 12rd
