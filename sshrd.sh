@@ -5,6 +5,15 @@
 set -e
 oscheck=$(uname)
 
+version="$1"
+
+major=$(echo "$version" | awk -F. '{print $1}')
+minor=$(echo "$version" | awk -F. '{print $2}')
+patch=$(echo "$version" | awk -F. '{print $3}')
+major=${major:-0}
+minor=${minor:-0}
+patch=${patch:-0}
+    
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
@@ -139,6 +148,13 @@ if [ "$1" = 'boot' ]; then
         exit
     fi
 
+    major=$(cat sshramdisk/version.txt | awk -F. '{print $1}')
+    minor=$(cat sshramdisk/version.txt | awk -F. '{print $2}')
+    patch=$(cat sshramdisk/version.txt | awk -F. '{print $3}')
+    major=${major:-0}
+    minor=${minor:-0}
+    patch=${patch:-0}
+    
     "$oscheck"/gaster pwn > /dev/null
     "$oscheck"/gaster reset > /dev/null
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
@@ -155,8 +171,12 @@ if [ "$1" = 'boot' ]; then
     "$oscheck"/irecovery -c ramdisk
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
     "$oscheck"/irecovery -c devicetree
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
     "$oscheck"/irecovery -f sshramdisk/trustcache.img4
     "$oscheck"/irecovery -c firmware
+    else
+    :
+    fi
     "$oscheck"/irecovery -f sshramdisk/kernelcache.img4
     "$oscheck"/irecovery -c bootx
 
@@ -183,9 +203,17 @@ cd work
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
 
 if [ "$oscheck" = 'Darwin' ]; then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
     ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
+    else
+    :
+    fi
 else
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
     ../"$oscheck"/pzb -g Firmware/"$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache "$ipswurl"
+    else
+    :
+    fi
 fi
 
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
@@ -211,23 +239,22 @@ cd ..
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
 
 if [ "$oscheck" = 'Darwin' ]; then
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
+        else
+        :
+    fi
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
+    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
     "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
+    else
+    :
+    fi
     "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    version="$1"
-
-    major=$(echo "$version" | awk -F. '{print $1}')
-    minor=$(echo "$version" | awk -F. '{print $2}')
-    patch=$(echo "$version" | awk -F. '{print $3}')
-    major=${major:-0}
-    minor=${minor:-0}
-    patch=${patch:-0}
-
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
     :
     else
@@ -236,7 +263,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
     
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
-        hdiutil create -size 210m -imagekey diskimage-class=CRawDiskImage -format UDIF -fs APFS -layout NONE -srcfolder /tmp/SSHRD -copyuid root work/ramdisk1.dmg # tmp
+        hdiutil create -size 210m -imagekey diskimage-class=CRawDiskImage -format UDIF -fs APFS -layout NONE -srcfolder /tmp/SSHRD -copyuid root work/ramdisk1.dmg
         hdiutil detach -force /tmp/SSHRD
         hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk1.dmg
     else
@@ -249,6 +276,21 @@ if [ "$oscheck" = 'Darwin' ]; then
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/t2ssh.tar.gz -C /tmp/SSHRD/
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
+        if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+        :
+        else
+        mkdir 12rd
+        ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
+        cd 12rd
+        ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl12"
+        ../"$oscheck"/pzb -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl12"
+                ../"$oscheck"/img4 -i "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o ramdisk.dmg
+                hdiutil attach -mountpoint /tmp/12rd ramdisk.dmg
+                cp /tmp/12rd/usr/lib/libiconv.2.dylib /tmp/12rd/usr/lib/libcharset.1.dylib /tmp/SSHRD/usr/lib/
+                hdiutil detach -force /tmp/12rd
+                cd ..
+                rm -rf 12rd
+            fi
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar.gz -C /tmp/SSHRD/
     fi
 
@@ -259,15 +301,6 @@ if [ "$oscheck" = 'Darwin' ]; then
         hdiutil resize -sectors min work/ramdisk.dmg
     fi
 else
-    version="$1"
-
-    major=$(echo "$version" | awk -F. '{print $1}')
-    minor=$(echo "$version" | awk -F. '{print $2}')
-    patch=$(echo "$version" | awk -F. '{print $3}')
-    major=${major:-0}
-    minor=${minor:-0}
-    patch=${patch:-0}
-
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
         echo "Sorry, 16.1 and above doesn't work on Linux at the moment!"
         exit
@@ -310,5 +343,6 @@ rm -rf work
 
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
+echo $1 > sshramdisk/version.txt
 
 # } | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
