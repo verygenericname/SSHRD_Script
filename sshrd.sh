@@ -175,11 +175,11 @@ if [ "$1" = 'boot' ]; then
     "$oscheck"/irecovery -c ramdisk
     "$oscheck"/irecovery -f sshramdisk/devicetree.img4
     "$oscheck"/irecovery -c devicetree
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
+    :
+    else
     "$oscheck"/irecovery -f sshramdisk/trustcache.img4
     "$oscheck"/irecovery -c firmware
-    else
-    :
     fi
     "$oscheck"/irecovery -f sshramdisk/kernelcache.img4
     "$oscheck"/irecovery -c bootx
@@ -207,16 +207,16 @@ cd work
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
 
 if [ "$oscheck" = 'Darwin' ]; then
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
-    ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
-    else
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
     :
+    else
+    ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
     fi
 else
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
-    ../"$oscheck"/pzb -g Firmware/"$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache "$ipswurl"
-    else
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
     :
+    else
+    ../"$oscheck"/pzb -g Firmware/"$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache "$ipswurl"
     fi
 fi
 
@@ -243,17 +243,17 @@ cd ..
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
 
 if [ "$oscheck" = 'Darwin' ]; then
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
-    "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
-        else
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
         :
+        else
+        "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
     fi
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
-    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
-    else
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
     :
+    else
+    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
     fi
     "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
@@ -280,9 +280,7 @@ if [ "$oscheck" = 'Darwin' ]; then
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/t2ssh.tar.gz -C /tmp/SSHRD/
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
-        :
-        else
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
         mkdir 12rd
         ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
         cd 12rd
@@ -294,6 +292,8 @@ if [ "$oscheck" = 'Darwin' ]; then
                 hdiutil detach -force /tmp/12rd
                 cd ..
                 rm -rf 12rd
+                else
+                :
             fi
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar.gz -C /tmp/SSHRD/
     fi
@@ -319,9 +319,7 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
-    if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 0 ] && [ "$patch" -ge 0 ])); then
-        :
-        else
+    if [ "$major" -lt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -lt 4 ] || [ "$minor" -eq 4 ] && [ "$patch" -le 1 ])); then
         mkdir 12rd
         ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
         cd 12rd
@@ -334,6 +332,8 @@ else
         ../"$oscheck"/hfsplus ../work/ramdisk.dmg add libcharset.1.dylib usr/lib/libcharset.1.dylib
         cd ..
         rm -rf 12rd
+        else
+        :
         fi
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
     fi
