@@ -17,7 +17,7 @@ patch=${patch:-0}
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
-    rm -rf work
+    rm -rf work 12rd
 
    # echo "[-] Uploading logs. If this fails, it's not a big deal."
    # for file in *.log; do
@@ -104,6 +104,10 @@ ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$osche
 
 if [ -e work ]; then
     rm -rf work
+fi
+
+if [ -e 12rd ]; then
+    rm -rf 12rd
 fi
 
 if [ ! -e sshramdisk ]; then
@@ -315,6 +319,22 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
+        if [ "$major" -gt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -gt 4 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+        :
+        else
+        mkdir 12rd
+        ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
+        cd 12rd
+        ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl12"
+        ../"$oscheck"/pzb -g "$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" "$ipswurl12"
+        ../"$oscheck"/img4 -i "$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o ramdisk.dmg
+        ../"$oscheck"/hfsplus ramdisk.dmg extract usr/lib/libcharset.1.dylib libcharset.1.dylib
+        ../"$oscheck"/hfsplus ramdisk.dmg extract usr/lib/libiconv.2.dylib libiconv.2.dylib
+        ../"$oscheck"/hfsplus ../work/ramdisk.dmg add libiconv.2.dylib usr/lib/libiconv.2.dylib
+        ../"$oscheck"/hfsplus ../work/ramdisk.dmg add libcharset.1.dylib usr/lib/libcharset.1.dylib
+        cd ..
+        rm -rf 12rd
+        fi
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
     fi
 fi
@@ -330,7 +350,7 @@ fi
 "$oscheck"/img4 -i other/bootlogo.im4p -o sshramdisk/logo.img4 -M work/IM4M -A -T rlgo
 echo ""
 echo "[*] Cleaning up work directory"
-rm -rf work
+rm -rf work 12rd
 
 # echo "[*] Uploading logs. If this fails, your ramdisk is still created."
 # set +e
