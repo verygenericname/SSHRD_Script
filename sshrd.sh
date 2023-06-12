@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # {
-set -o xtrace
+
 # $(rm *.log 2> /dev/null)
 set -e
 oscheck=$(uname)
