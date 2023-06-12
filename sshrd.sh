@@ -287,13 +287,13 @@ if [ "$oscheck" = 'Darwin' ]; then
         ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl12"
         ../"$oscheck"/pzb -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl12"
                 ../"$oscheck"/img4 -i "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o ramdisk.dmg
-                hdiutil attach -mountpoint /tmp/12rd ramdisk.dmg
-                cp /tmp/12rd/usr/lib/libiconv.2.dylib /tmp/12rd/usr/lib/libcharset.1.dylib /tmp/SSHRD/usr/lib/
-                hdiutil detach -force /tmp/12rd
-                cd ..
-                rm -rf 12rd
-                else
-                :
+        hdiutil attach -mountpoint /tmp/12rd ramdisk.dmg
+        cp /tmp/12rd/usr/lib/libiconv.2.dylib /tmp/12rd/usr/lib/libcharset.1.dylib /tmp/SSHRD/usr/lib/
+        hdiutil detach -force /tmp/12rd
+        cd ..
+        rm -rf 12rd
+    else
+        :
             fi
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar.gz -C /tmp/SSHRD/
     fi
@@ -319,7 +319,7 @@ else
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/t2ssh.tar > /dev/null
         echo "[!] WARNING: T2 MIGHT HANG AND DO NOTHING WHEN BOOTING THE RAMDISK!"
     else
-    if [ "$major" -lt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -lt 4 ] || [ "$minor" -eq 4 ] && [ "$patch" -le 1 ])); then
+    if [[ "$major" -lt 11 ]] || [[ "$major" -eq 11 && "$minor" -lt 4 ]] || [[ "$major" -eq 11 && "$minor" -eq 4 && "$patch" -le 1 ]]; then
         mkdir 12rd
         ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
         cd 12rd
@@ -332,8 +332,8 @@ else
         ../"$oscheck"/hfsplus ../work/ramdisk.dmg add libcharset.1.dylib usr/lib/libcharset.1.dylib
         cd ..
         rm -rf 12rd
-        else
-        :
+    else
+    :
         fi
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
     fi
