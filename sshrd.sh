@@ -267,7 +267,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
     
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
-        hdiutil create -size 210m -imagekey diskimage-class=CRawDiskImage -format UDIF -fs APFS -layout NONE -srcfolder /tmp/SSHRD -copyuid root work/ramdisk1.dmg
+        hdiutil create -size 210m -imagekey diskimage-class=CRawDiskImage -format UDZO -fs HFS+ -layout NONE -srcfolder /tmp/SSHRD -copyuid root work/ramdisk1.dmg
         hdiutil detach -force /tmp/SSHRD
         hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk1.dmg
     else
@@ -300,7 +300,7 @@ if [ "$oscheck" = 'Darwin' ]; then
 
     hdiutil detach -force /tmp/SSHRD
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
-        :
+        hdiutil resize -sectors min work/ramdisk1.dmg
     else
         hdiutil resize -sectors min work/ramdisk.dmg
     fi
