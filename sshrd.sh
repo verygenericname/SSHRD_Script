@@ -62,6 +62,14 @@ elif [ "$1" = 'dump-blobs' ]; then
     killall iproxy
     echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
     exit
+elif [ "$1" = 'reset' ]; then
+    "$oscheck"/iproxy 2222 22 &>/dev/null &
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "nvram oblit-inprogress=5"
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "sync"
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "reboot"
+    killall iproxy
+    echo "[*] Device should now show a progress bar and erase all data"
+    exit
 elif [ "$1" = 'reboot' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "/sbin/reboot"
@@ -108,30 +116,7 @@ if [ ! -e sshramdisk ]; then
     mkdir sshramdisk
 fi
 
-if [ "$1" = 'reset' ]; then
-    if [ ! -e sshramdisk/iBSS.img4 ]; then
-        echo "[-] Please create an SSH ramdisk first!"
-        exit
-    fi
 
-    "$oscheck"/gaster pwn > /dev/null
-    "$oscheck"/gaster reset > /dev/null
-    "$oscheck"/irecovery -f sshramdisk/iBSS.img4
-    sleep 2
-    "$oscheck"/irecovery -f sshramdisk/iBEC.img4
-
-    if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-        "$oscheck"/irecovery -c go
-    fi
-
-    sleep 2
-    "$oscheck"/irecovery -c "setenv oblit-inprogress 5"
-    "$oscheck"/irecovery -c saveenv
-    "$oscheck"/irecovery -c reset
-
-    echo "[*] Device should now show a progress bar and erase all data"
-    exit
-fi
 
 if [ "$2" = 'TrollStore' ]; then
     if [ -z "$3" ]; then
