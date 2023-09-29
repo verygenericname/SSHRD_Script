@@ -68,10 +68,10 @@ if [ "$1" = 'boot' ]; then
     sleep 2
     "$oscheck"/irecovery -f boot/${deviceid}/iBEC.img4
     if [ "$check" = '0x8010' ] || [ "$check" = '0x8015' ] || [ "$check" = '0x8011' ] || [ "$check" = '0x8012' ]; then
-        sleep 1
+        sleep 2
         "$oscheck"/irecovery -c go
     fi
-    sleep 1
+    sleep 4
     "$oscheck"/irecovery -f boot/${deviceid}/bootlogo.img4
     sleep 1
     "$oscheck"/irecovery -c "setpicture 0x1"
