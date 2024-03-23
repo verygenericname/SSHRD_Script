@@ -18,6 +18,7 @@ ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
     rm -rf work 12rd
+    killall iproxy
 
    # echo "[-] Uploading logs. If this fails, it's not a big deal."
    # for file in *.log; do
