@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
-# {
-
-# $(rm *.log 2> /dev/null)
+if [ ! -e logs ]; then
+mkdir logs | true
+fi
+$(rm logs/*.log 2> /dev/null)
+{
 set -e
 oscheck=$(uname)
 
@@ -17,15 +19,15 @@ patch=${patch:-0}
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
-    rm -rf work 12rd
-    killall iproxy
+    rm -rf work 12rd | true
+    killall iproxy | true
 
-   # echo "[-] Uploading logs. If this fails, it's not a big deal."
-   # for file in *.log; do
-   #     mv "$file" FAILURE_${file}
-   # done
-   # $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
-   # echo "[!] Done uploading logs, i'll be sure to look at them and fix the issue you are facing"
+    echo "[-] Uploading logs. If this fails, it's not a big deal."
+    for file in logs/*.log; do
+        mv "$file" logs/FAILURE_${file##*/}
+    done
+    $(curl -A SSHRD_Script -F "fileToUpload=@$(ls logs/*.log)" https://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+    echo "[!] Done uploading logs, I'll be sure to look at them and fix the issue you are facing"
 }
 
 trap ERR_HANDLER EXIT
@@ -75,9 +77,10 @@ elif [ "$1" = 'reboot' ]; then
     echo "[*] Device should now reboot"
     exit
 elif [ "$1" = 'ssh' ]; then
+    killall iproxy 2>/dev/null | true
     "$oscheck"/iproxy 2222 22 &>/dev/null &
-    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost
-    killall iproxy
+    "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost || true
+    killall iproxy 2>/dev/null | true
     exit
 elif [ "$oscheck" = 'Darwin' ]; then
     if ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); then
@@ -361,17 +364,17 @@ echo ""
 echo "[*] Cleaning up work directory"
 rm -rf work 12rd
 
-# echo "[*] Uploading logs. If this fails, your ramdisk is still created."
-# set +e
-# for file in *.log; do
-#    mv "$file" SUCCESS_${file}
-# done
-# $(curl -A SSHRD_Script -F "fileToUpload=@$(ls *.log)" http://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
-# set -e
-# echo "[*] Done uploading logs!"
+ echo "[*] Uploading logs. If this fails, your ramdisk is still created."
+ set +e
+ for file in logs/*.log; do
+    mv "$file" logs/SUCCESS_${file##*/}
+ done
+ $(curl -A SSHRD_Script -F "fileToUpload=@$(ls logs/*.log)" https://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+ set -e
+ echo "[*] Done uploading logs!"
 
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
 echo $1 > sshramdisk/version.txt
 
-# } | tee "$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
+ } | tee logs/"$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log
