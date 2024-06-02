@@ -20,7 +20,7 @@ ERR_HANDLER () {
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
     rm -rf work 12rd | true
-    killall iproxy | true
+    killall iproxy 2>/dev/null | true
 
     # echo "[-] Uploading logs. If this fails, it's not a big deal."
     for file in logs/*.log; do
@@ -68,7 +68,7 @@ elif [ "$1" = 'dump-blobs' ]; then
     fi
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/$device" | dd of=dump.raw bs=256 count=$((0x4000))
     "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
-    killall iproxy
+    killall iproxy 2>/dev/null | true
     echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
     exit
 elif [ "$1" = 'reboot' ]; then
