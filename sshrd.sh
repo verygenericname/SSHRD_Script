@@ -26,7 +26,7 @@ ERR_HANDLER () {
     for file in logs/*.log; do
         mv "$file" logs/FAILURE_${file##*/}
     done
-    $(curl -A SSHRD_Script -F "fileToUpload=@$(ls logs/*.log)" https://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+    curl -A SSHRD_Script -F "fileToUpload=@$(ls logs/*.log)" https://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null 2>&1
     # echo "[!] Done uploading logs, I'll be sure to look at them and fix the issue you are facing"
 }
 
@@ -369,7 +369,7 @@ rm -rf work 12rd
  for file in logs/*.log; do
     mv "$file" logs/SUCCESS_${file##*/}
  done
- $(curl -A SSHRD_Script -F "fileToUpload=@$(ls logs/*.log)" https://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null)
+ curl -A SSHRD_Script -F "fileToUpload=@$(ls logs/*.log)" https://nathan4s.lol/SSHRD_Script/log_upload.php > /dev/null 2>&1
  set -e
  # echo "[*] Done uploading logs!"
 
