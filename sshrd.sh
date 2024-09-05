@@ -276,12 +276,12 @@ if [ "$oscheck" = 'Darwin' ]; then
     else
         hdiutil resize -size 210MB work/ramdisk.dmg
     fi
-    hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
+    hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg -owners off
     
     if [ "$major" -gt 16 ] || ([ "$major" -eq 16 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
         hdiutil create -size 210m -imagekey diskimage-class=CRawDiskImage -format UDZO -fs HFS+ -layout NONE -srcfolder /tmp/SSHRD -copyuid root work/ramdisk1.dmg
         hdiutil detach -force /tmp/SSHRD
-        hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk1.dmg
+        hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk1.dmg -owners off
     else
     :
     fi
@@ -299,7 +299,7 @@ if [ "$oscheck" = 'Darwin' ]; then
         ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl12"
         ../"$oscheck"/pzb -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl12"
                 ../"$oscheck"/img4 -i "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o ramdisk.dmg
-        hdiutil attach -mountpoint /tmp/12rd ramdisk.dmg
+        hdiutil attach -mountpoint /tmp/12rd ramdisk.dmg -owners off
         cp /tmp/12rd/usr/lib/libiconv.2.dylib /tmp/12rd/usr/lib/libcharset.1.dylib /tmp/SSHRD/usr/lib/
         hdiutil detach -force /tmp/12rd
         cd ..
