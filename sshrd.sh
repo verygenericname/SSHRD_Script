@@ -45,7 +45,7 @@ if [ -e sshtars/ssh.tar.gz ]; then
 fi
 
 if [ ! -e "$oscheck"/gaster ]; then
-    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
+    curl -sLO https://static.palera.in/legacy/deps/gaster-"$oscheck".zip
     unzip gaster-"$oscheck".zip
     mv gaster "$oscheck"/
     rm -rf gaster gaster-"$oscheck".zip
