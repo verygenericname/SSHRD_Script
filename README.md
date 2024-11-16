@@ -21,7 +21,7 @@ Create and boot a SSH ramdisk on checkm8 devices
 
 # Usage
 
-1. Clone and cd into this repository: `git clone https://github.com/verygenericname/SSHRD_Script --recursive && cd SSHRD_Script`
+1. Clone and cd into this repository: `git clone https://github.com/ddvniele/SSHRD_Script --recursive && cd SSHRD_Script`
     - If you have cloned this before, run `cd SSHRD_Script && git pull` to pull new changes
 2. Run `./sshrd.sh <iOS version for ramdisk>`, **without** the `<>`.
     - The iOS version doesn't have to be the version you're currently on, but it should be close enough, and SEP has to be compatible
@@ -65,3 +65,4 @@ sudo usbmuxd -p -f
 - [Nebula](https://github.com/itsnebulalol) for a bunch of QOL fixes to this script
 - [OpenAI](https://chat.openai.com/chat) for converting [kerneldiff](https://github.com/mcg29/kerneldiff) into [C](https://github.com/verygenericname/kerneldiff_C)
 - [Ploosh](https://github.com/plooshi) for KPlooshFinder
+- [palera1n](https://palera.in) for new gaster downloads
