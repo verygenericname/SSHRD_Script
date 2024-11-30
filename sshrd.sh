@@ -78,9 +78,17 @@ elif [ "$1" = 'reboot' ]; then
     exit
 elif [ "$1" = 'ssh' ]; then
     killall iproxy 2>/dev/null | true
+    if [ "$oscheck" = 'Linux' ]; then
+        sudo systemctl stop usbmuxd 2>/dev/null | true
+        sudo killall usbmuxd 2>/dev/null | true
+        sleep .1
+        sudo usbmuxd -pf &>/dev/null &
+        sleep .1
+    fi
     "$oscheck"/iproxy 2222 22 &>/dev/null &
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost || true
     killall iproxy 2>/dev/null | true
+    sudo killall usbmuxd 2>/dev/null | true
     exit
 elif [ "$oscheck" = 'Darwin' ]; then
     if ! (system_profiler SPUSBDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); then
