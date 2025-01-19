@@ -9,12 +9,9 @@ oscheck=$(uname)
 
 version="$1"
 
-major=$(echo "$version" | awk -F. '{print $1}')
-minor=$(echo "$version" | awk -F. '{print $2}')
-patch=$(echo "$version" | awk -F. '{print $3}')
-major=${major:-0}
-minor=${minor:-0}
-patch=${patch:-0}
+major=$(echo "$version" | cut -d. -f1)
+minor=$(echo "$version" | cut -d. -f2)
+patch=$(echo "$version" | cut -d. -f3)
     
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
