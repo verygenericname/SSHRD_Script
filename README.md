@@ -58,6 +58,8 @@ sudo usbmuxd -p -f
 
 # Credits
 
+- [palera1n](https://github.com/palera1n/palera1n) for pretty much the method of this branch. thanks again.
+- - [palera1n](https://github.com/palera1n/PongoOS) For PongoOS and kpf.
 - [tihmstar](https://github.com/tihmstar) for pzb/original iBoot64Patcher/img4tool
 - [xerub](https://github.com/xerub) for img4lib and restored_external in the ramdisk
 - [Cryptic](https://github.com/Cryptiiiic) for iBoot64Patcher fork
