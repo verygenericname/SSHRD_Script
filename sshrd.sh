@@ -68,9 +68,9 @@ elif [ "$1" = 'dump-blobs' ]; then
         device=rdisk1
     fi
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/$device" | dd of=dump.raw bs=256 count=$((0x4000))
-    "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
+    "$oscheck"/img4tool --convert -s dumped.shsh2 dump.raw
     killall iproxy 2>/dev/null | true
-    echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
+    echo "[*] Onboard blobs should have dumped to the dumped.shsh2 file"
     exit
 elif [ "$1" = 'reboot' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
