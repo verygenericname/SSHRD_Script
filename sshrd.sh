@@ -42,10 +42,14 @@ if [ -e sshtars/ssh.tar.gz ]; then
 fi
 
 if [ ! -e "$oscheck"/gaster ]; then
-    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/gaster-"$oscheck".zip
-    unzip gaster-"$oscheck".zip
+    gaster="gaster-$oscheck"
+    if [ "$oscheck" = 'Linux' ]; then
+        gaster="gaster-$oscheck-x86_64"
+    fi
+    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/"$gaster".zip
+    unzip "$gaster".zip
     mv gaster "$oscheck"/
-    rm -rf gaster gaster-"$oscheck".zip
+    rm -rf gaster "$gaster".zip
 fi
 
 chmod +x "$oscheck"/*
@@ -64,9 +68,9 @@ elif [ "$1" = 'dump-blobs' ]; then
         device=rdisk1
     fi
     "$oscheck"/sshpass -p 'alpine' ssh -o StrictHostKeyChecking=no -p2222 root@localhost "cat /dev/$device" | dd of=dump.raw bs=256 count=$((0x4000))
-    "$oscheck"/img4tool --convert -s dumped.shsh dump.raw
+    "$oscheck"/img4tool --convert -s dumped.shsh2 dump.raw
     killall iproxy 2>/dev/null | true
-    echo "[*] Onboard blobs should have dumped to the dumped.shsh file"
+    echo "[*] Onboard blobs should have dumped to the dumped.shsh2 file"
     exit
 elif [ "$1" = 'reboot' ]; then
     "$oscheck"/iproxy 2222 22 &>/dev/null &
@@ -121,11 +125,7 @@ if [ "$1" = 'reset' ]; then
         exit
     fi
 
-    if [ "$check" = '0x8960' ]; then
-        "$oscheck"/ipwnder > /dev/null
-    else
-        "$oscheck"/gaster pwn > /dev/null
-    fi
+    "$oscheck"/gaster pwn > /dev/null
     "$oscheck"/gaster reset > /dev/null
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
@@ -164,11 +164,7 @@ if [ "$1" = 'boot' ]; then
     minor=${minor:-0}
     patch=${patch:-0}
     
-    if [ "$check" = '0x8960' ]; then
-        "$oscheck"/ipwnder > /dev/null
-    else
-        "$oscheck"/gaster pwn > /dev/null
-    fi
+    "$oscheck"/gaster pwn > /dev/null
     "$oscheck"/gaster reset > /dev/null
     "$oscheck"/irecovery -f sshramdisk/iBSS.img4
     sleep 2
