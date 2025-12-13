@@ -46,7 +46,7 @@ if [ ! -e "$oscheck"/gaster ]; then
     if [ "$oscheck" = 'Linux' ]; then
         gaster="gaster-$oscheck-x86_64"
     fi
-    curl -sLO https://nightly.link/verygenericname/gaster/workflows/makefile/main/"$gaster".zip
+    curl -sLO https://static.palera.in/legacy/deps/"$gaster".zip
     unzip "$gaster".zip
     mv gaster "$oscheck"/
     rm -rf gaster "$gaster".zip
