@@ -7,11 +7,21 @@ $(rm logs/*.log 2> /dev/null)
 set -e
 oscheck=$(uname)
 
-version="$1"
+if [ -f "$1" ] && [[ "$1" == *.ipsw || "$1" == *.IPSW ]]; then
+    ipswurl=$1
+    # Extract BuildManifest.plist to get the version
+    python3 ./remote_zip_viewer.py -g BuildManifest.plist "$ipswurl" >/dev/null
+    if [ "$oscheck" = 'Darwin' ]; then
+        version=$(plutil -p BuildManifest.plist | grep '"ProductVersion"' | awk -F ' => ' '{print $2}' | tr -d '"')
+    else
+        version=$(python3 -c "import plistlib; print(plistlib.load(open('BuildManifest.plist', 'rb'))['ProductVersion'])")
+    fi
+    rm BuildManifest.plist
 
-major=$(echo "$version" | cut -d. -f1)
-minor=$(echo "$version" | cut -d. -f2)
-patch=$(echo "$version" | cut -d. -f3)
+    major=$(echo "$version" | cut -d. -f1)
+    minor=$(echo "$version" | cut -d. -f2)
+    patch=$(echo "$version" | cut -d. -f3)
+fi
     
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
@@ -91,6 +101,14 @@ elif [ "$oscheck" = 'Darwin' ]; then
     while ! (system_profiler SPUSBDataType SPUSBHostDataType 2> /dev/null | grep ' Apple Mobile Device (DFU Mode)' >> /dev/null); do
         sleep 1
     done
+elif [ "$oscheck" = 'MINGW64_NT-10.0-22631' ]; then
+	if ! pnputil -enum-devices -connected -class USB | grep -q ' Apple Mobile Device'; then
+		echo "[*] Waiting for device in DFU mode"
+	fi
+	
+	while ! pnputil -enum-devices -connected -class USB | grep ' Apple Mobile Device' >/dev/null; do
+		sleep 1
+	done
 else
     if ! (lsusb 2> /dev/null | grep ' Apple, Inc. Mobile Device (DFU Mode)' >> /dev/null); then
         echo "[*] Waiting for device in DFU mode"
@@ -105,7 +123,23 @@ echo "[*] Getting device info and pwning... this may take a second"
 check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
 replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
 deviceid=$("$oscheck"/irecovery -q | grep PRODUCT | sed 's/PRODUCT: //')
-ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$1'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
+if [ -f "$1" ]; then
+    ipswurl=$1
+    # Extract BuildManifest.plist to get the version
+    python3 ./remote_zip_viewer.py -g BuildManifest.plist "$ipswurl" >/dev/null
+    if [ "$oscheck" = 'Darwin' ]; then
+        version=$(plutil -p BuildManifest.plist | grep '"ProductVersion"' | awk -F ' => ' '{print $2}' | tr -d '"')
+    else
+        version=$(python3 -c "import plistlib; print(plistlib.load(open('BuildManifest.plist', 'rb'))['ProductVersion'])")
+    fi
+    rm BuildManifest.plist
+
+    major=$(echo "$version" | cut -d. -f1)
+    minor=$(echo "$version" | cut -d. -f2)
+    patch=$(echo "$version" | cut -d. -f3)
+else
+    ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$1'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
+fi
 
 if [ -e work ]; then
     rm -rf work
@@ -206,31 +240,31 @@ fi
 "$oscheck"/img4tool -e -s other/shsh/"${check}".shsh -m work/IM4M
 
 cd work
-../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl"
-../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
-../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
-../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
+python3 ../remote_zip_viewer.py -g BuildManifest.plist "$ipswurl"
+python3 ../remote_zip_viewer.py -g "$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
+python3 ../remote_zip_viewer.py -g "$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
+python3 ../remote_zip_viewer.py -g "$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
 
 if [ "$oscheck" = 'Darwin' ]; then
     if [ "$major" -lt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -lt 4 ] || [ "$minor" -eq 4 ] && [ "$patch" -le 1 ] || [ "$check" != '0x8012' ])); then
     :
     else
-    ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
+    python3 ../remote_zip_viewer.py -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
     fi
 else
     if [ "$major" -lt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -lt 4 ] || [ "$minor" -eq 4 ] && [ "$patch" -le 1 ] || [ "$check" != '0x8012' ])); then
     :
     else
-    ../"$oscheck"/pzb -g Firmware/"$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache "$ipswurl"
+    python3 ../remote_zip_viewer.py -g Firmware/"$(python3 -c "import plistlib; pl = plistlib.load(open('./BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])" | sed 's/"//g')".trustcache "$ipswurl"
     fi
 fi
 
-../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
+python3 ../remote_zip_viewer.py -g "$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
 
 if [ "$oscheck" = 'Darwin' ]; then
-    ../"$oscheck"/pzb -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl"
+    python3 ../remote_zip_viewer.py -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl"
 else
-    ../"$oscheck"/pzb -g "$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" "$ipswurl"
+    python3 ../remote_zip_viewer.py -g "$(python3 -c "import plistlib; pl = plistlib.load(open('./BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])"  | sed 's/"//g')" "$ipswurl"
 fi
 
 cd ..
@@ -263,9 +297,9 @@ else
     if [ "$major" -lt 11 ] || ([ "$major" -eq 11 ] && ([ "$minor" -lt 4 ] || [ "$minor" -eq 4 ] && [ "$patch" -le 1 ] || [ "$check" != '0x8012' ])); then
     :
     else
-    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
+    "$oscheck"/img4 -i work/"$(python3 -c "import plistlib; pl = plistlib.load(open('work/BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
     fi
-    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
+    "$oscheck"/img4 -i work/"$(python3 -c "import plistlib; pl = plistlib.load(open('work/BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
@@ -294,8 +328,8 @@ if [ "$oscheck" = 'Darwin' ]; then
         mkdir 12rd
         ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
         cd 12rd
-        ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl12"
-        ../"$oscheck"/pzb -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl12"
+        python3 ../remote_zip_viewer.py -g BuildManifest.plist "$ipswurl12"
+        python3 ../remote_zip_viewer.py -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl12"
                 ../"$oscheck"/img4 -i "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o ramdisk.dmg
         hdiutil attach -mountpoint /tmp/12rd ramdisk.dmg -owners off
         cp /tmp/12rd/usr/lib/libiconv.2.dylib /tmp/12rd/usr/lib/libcharset.1.dylib /tmp/SSHRD/usr/lib/
@@ -333,9 +367,11 @@ else
         mkdir 12rd
         ipswurl12=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'12.0'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
         cd 12rd
-        ../"$oscheck"/pzb -g BuildManifest.plist "$ipswurl12"
-        ../"$oscheck"/pzb -g "$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" "$ipswurl12"
-        ../"$oscheck"/img4 -i "$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o ramdisk.dmg
+        python3 ../remote_zip_viewer.py -g BuildManifest.plist "$ipswurl12"
+        ramdiskname=python3 -c "import plistlib; pl = plistlib.load(open('./BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])" | sed 's/"//g'
+        echo $ramdiskname
+        python3 ../remote_zip_viewer.py -g "$(python3 -c "import plistlib; pl = plistlib.load(open('./BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])" | sed 's/"//g')" "$ipswurl12"
+        ../"$oscheck"/img4 -i "$(python3 -c "import plistlib; pl = plistlib.load(open('./BuildManifest.plist', 'rb')); print(pl['BuildIdentities'][0]['Manifest']['RestoreRamDisk']['Info']['Path'])" | sed 's/"//g')" -o ramdisk.dmg
         ../"$oscheck"/hfsplus ramdisk.dmg extract usr/lib/libcharset.1.dylib libcharset.1.dylib
         ../"$oscheck"/hfsplus ramdisk.dmg extract usr/lib/libiconv.2.dylib libiconv.2.dylib
         ../"$oscheck"/hfsplus ../work/ramdisk.dmg add libiconv.2.dylib usr/lib/libiconv.2.dylib
@@ -373,6 +409,13 @@ rm -rf work 12rd
 
 echo ""
 echo "[*] Finished! Please use ./sshrd.sh boot to boot your device"
-echo $1 > sshramdisk/version.txt
+echo $version > sshramdisk/version.txt
 
+echo "making ramdisk copy"
+ramdiskfolder=ramdisks/"$replace"_"$version"/
+mkdir -p $ramdiskfolder | true
+for file in sshramdisk/*; do
+    echo "copying $file to $ramdiskfolder"
+    cp -au "$file" "$ramdiskfolder"
+done
  } | tee logs/"$(date +%T)"-"$(date +%F)"-"$(uname)"-"$(uname -r)".log

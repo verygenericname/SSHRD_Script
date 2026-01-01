@@ -1,67 +1,104 @@
-<h1 align="center">SSH Ramdisk Script</h1>
+# SSH Ramdisk Script
+
 <p align="center">
-  <a href="https://github.com/verygenericname/SSHRD_Script/graphs/contributors" target="_blank">
-    <img src="https://img.shields.io/github/contributors/verygenericname/SSHRD_Script.svg" alt="Contributors">
+  <img src="https://img.shields.io/github/stars/kagbontaen/SSHRD_Script?style=for-the-badge" />
+  <img src="https://img.shields.io/github/forks/kagbontaen/SSHRD_Script?style=for-the-badge" />
+  <img src="https://img.shields.io/github/issues/kagbontaen/SSHRD_Script?style=for-the-badge" />
+  <img src="https://img.shields.io/github/license/kagbontaen/SSHRD_Script?style=for-the-badge" />
+</p>
+
+
+<p align="center">
+  <a href="https://github.com/kagbontaen/SSHRD_Script/graphs/contributors" target="_blank">
+    <img src="https://img.shields.io/github/contributors/kagbontaen/SSHRD_Script.svg" alt="Contributors">
   </a>
-  <a href="https://github.com/verygenericname/SSHRD_Script/commits/main" target="_blank">
-    <img src="https://img.shields.io/github/commit-activity/w/verygenericname/SSHRD_Script.svg" alt="Commits">
+  <a href="https://github.com/kagbontaen/SSHRD_Script/commits/main" target="_blank">
+    <img src="https://img.shields.io/github/commit-activity/w/kagbontaen/SSHRD_Script.svg" alt="Commits">
   </a>
 </p>
 
-<p align="center">
-Create and boot a SSH ramdisk on checkm8 devices
-</p>
+<p align="center">Create and boot a SSH ramdisk on checkm8 devices</p>
 
 ---
 
-# Prerequsites
+# About this Fork
+This fork differs from **verygenericname's** version in the following ways:
+- **Supports offline IPSW files** for ramdisk creation.
+- **Automatically saves a copy of generated ramdisk files** to:
+  ```
+  ramdisk/<model>_<version>/
+  ```
 
-1. A computer running macOS/linux
-2. A checkm8 device (A7-A11)
+---
+
+# Prerequisites
+1. A computer running macOS or Linux
+2. A checkm8-compatible device (A7–A11)
 
 # Usage
+1. Clone and enter the repository:
+   ```bash
+   git clone https://github.com/kagbontaen/SSHRD_Script --recursive && cd SSHRD_Script
+   ```
+   If previously cloned:
+   ```bash
+   cd SSHRD_Script && git pull
+   ```
 
-1. Clone and cd into this repository: `git clone https://github.com/verygenericname/SSHRD_Script --recursive && cd SSHRD_Script`
-    - If you have cloned this before, run `cd SSHRD_Script && git pull` to pull new changes
-2. Run `./sshrd.sh <iOS version for ramdisk>`, **without** the `<>`.
-    - The iOS version doesn't have to be the version you're currently on, but it should be close enough, and SEP has to be compatible
-    - If you're on Linux, you will not be able to make a ramdisk for 16.1+, please use something lower instead, like 16.0
-        - This is due to ramdisks switching to APFS over HFS+, and another dmg library would have to be used
-3. Place your device into DFU mode
-    - A11 users, go to recovery first, then DFU.
-4. Run `./sshrd.sh boot` to boot the ramdisk
-5. Run `./sshrd.sh ssh` to connect to SSH on your device
-6. Finally, to mount the filesystems, run `mount_filesystems`  
-    - /var is mounted to /mnt2 in the ssh session.
-    - /private/preboot is mounted to /mnt6.
-    - DO NOT RUN THIS IF THE DEVICE IS ON A REALLY OLD VERSION!!!!!!!
-7. Have fun!
+2. Run the ramdisk creation command:
+   ```bash
+   ./sshrd.sh <iOS version>
+   ```
+   - The iOS version does **not** need to match the device, but SEP must be compatible.
+   - **Linux users:** iOS 16.1+ ramdisks cannot be created due to APFS changes; use 16.0 or lower.
 
-# Linux notes
+3. Place your device into DFU mode.
+   - A11 devices: Recovery Mode → DFU.
 
-On Linux, usbmuxd will have to be restarted. On most distros, it's as simple as these 2 commands in another terminal:
-```
+4. Boot the SSH ramdisk:
+   ```bash
+   ./sshrd.sh boot
+   ```
+
+5. Connect via SSH:
+   ```bash
+   ./sshrd.sh ssh
+   ```
+
+6. Mount filesystems:
+   ```bash
+   mount_filesystems
+   ```
+   - `/var` mounts to `/mnt2`
+   - `/private/preboot` mounts to `/mnt6`
+   - **Do NOT run this on very old iOS versions.**
+
+# Linux Notes
+On Linux, `usbmuxd` must be restarted. Run these in another terminal:
+```bash
 sudo systemctl stop usbmuxd
 sudo usbmuxd -p -f
 ```
 
-# Other commands
-
-- Reboot your device: `./sshrd.sh reboot`
-- Erase all data from your device: `./sshrd.sh reset`
+# Other Commands
+- Reboot device: `./sshrd.sh reboot`
+- Erase all data: `./sshrd.sh reset`
 - Dump onboard SHSH blobs: `./sshrd.sh dump-blobs`
-- Delete old SSH ramdisk: `./sshrd.sh clean`
+- Delete old ramdisk: `./sshrd.sh clean`
 
-# Other Stuff
+---
 
+# Other Resources
 - [Reddit Post](https://www.reddit.com/r/jailbreak/comments/wgiye1/free_release_ssh_ramdisk_creator_for_iphones_ipad/)
 
-# Credits
+---
 
-- [tihmstar](https://github.com/tihmstar) for pzb/original iBoot64Patcher/img4tool
-- [xerub](https://github.com/xerub) for img4lib and restored_external in the ramdisk
-- [Cryptic](https://github.com/Cryptiiiic) for iBoot64Patcher fork
-- [opa334](https://github.com/opa334) for TrollStore
-- [Nebula](https://github.com/itsnebulalol) for a bunch of QOL fixes to this script
-- [OpenAI](https://chat.openai.com/chat) for converting [kerneldiff](https://github.com/mcg29/kerneldiff) into [C](https://github.com/verygenericname/kerneldiff_C)
-- [Ploosh](https://github.com/plooshi) for KPlooshFinder
+# Credits
+- **remote-zip-viewer.py** (from the [remote-zip-downloader](https://github.com/kagbontaen/remote-zip-downloader) project)
+- [tihmstar](https://github.com/tihmstar) — pzb, original iBoot64Patcher, img4tool
+- [xerub](https://github.com/xerub) — img4lib, restored_external
+- [Cryptic](https://github.com/Cryptiiiic) — iBoot64Patcher fork
+- [opa334](https://github.com/opa334) — TrollStore
+- [Nebula](https://github.com/itsnebulalol) — QOL fixes
+- [OpenAI](https://chat.openai.com/chat) — kerneldiff → C port
+- [Ploosh](https://github.com/plooshi) — KPlooshFinder

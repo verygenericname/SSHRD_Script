@@ -5,3 +5,6 @@ work
 sshramdisk
 .irecovery
 *.log
+nul
+ramdisks/
+sshrd-kk.sh
