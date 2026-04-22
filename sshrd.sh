@@ -392,7 +392,7 @@ else
     else
     :
         fi
-	if [ "$darwin_major" -lt 22 ] || ([ "$darwin_major" -eq 22 ] && ([ "$minor" -lt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
+	if [ "$darwin_major" -lt 22 ] || ([ "$darwin_major" -eq 22 ] && ([ "$minor" -lt 1 ])); then
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
 	fi
     fi
