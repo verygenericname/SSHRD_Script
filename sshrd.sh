@@ -350,8 +350,7 @@ if [ "$oscheck" = 'Darwin' ]; then
     fi
 else
     if [ "$darwin_major" -gt 22 ] || ([ "$darwin_major" -eq 22 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
-        echo "Hiylx's APFS fix"
-	
+	echo iOS 16.1+ used, converting APFS ramdisk to HFS+
 	mkdir -p /tmp/SSHRD_APFS
 	mkdir -p /tmp/SSHRD_HFS
 	"$oscheck"/apfs-fuse -o allow_other work/ramdisk.dmg /tmp/SSHRD_APFS
