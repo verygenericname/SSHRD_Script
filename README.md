@@ -25,8 +25,6 @@ Create and boot a SSH ramdisk on checkm8 devices
     - If you have cloned this before, run `cd SSHRD_Script && git pull` to pull new changes
 2. Run `./sshrd.sh <iOS version for ramdisk>`, **without** the `<>`.
     - The iOS version doesn't have to be the version you're currently on, but it should be close enough, and SEP has to be compatible
-    - If you're on Linux, you will not be able to make a ramdisk for 16.1+, please use something lower instead, like 16.0
-        - This is due to ramdisks switching to APFS over HFS+, and another dmg library would have to be used
 3. Place your device into DFU mode
     - A11 users, go to recovery first, then DFU.
 4. Run `./sshrd.sh boot` to boot the ramdisk
@@ -65,3 +63,4 @@ sudo usbmuxd -p -f
 - [Nebula](https://github.com/itsnebulalol) for a bunch of QOL fixes to this script
 - [OpenAI](https://chat.openai.com/chat) for converting [kerneldiff](https://github.com/mcg29/kerneldiff) into [C](https://github.com/verygenericname/kerneldiff_C)
 - [Ploosh](https://github.com/plooshi) for KPlooshFinder
+- [hiylx](https://github.com/hiylx) for linux APFS support on iOS 16.1+

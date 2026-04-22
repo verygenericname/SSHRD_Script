@@ -273,7 +273,6 @@ fi
 "$oscheck"/img4 -i work/iBSS.patched -o sshramdisk/iBSS.img4 -M work/IM4M -A -T ibss
 "$oscheck"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e -v wdt=-1 `if [ -z "$2" ]; then :; else echo "$2=$3"; fi` `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "nand-enable-reformat=1 -restore"; fi`" -n
 "$oscheck"/img4 -i work/iBEC.patched -o sshramdisk/iBEC.img4 -M work/IM4M -A -T ibec
-
 "$oscheck"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
 "$oscheck"/KPlooshFinder work/kcache.raw work/kcache.patched
 "$oscheck"/kerneldiff work/kcache.raw work/kcache.patched work/kc.bpatch
@@ -351,12 +350,21 @@ if [ "$oscheck" = 'Darwin' ]; then
     fi
 else
     if [ "$darwin_major" -gt 22 ] || ([ "$darwin_major" -eq 22 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
-        echo "Sorry, 16.1 and above doesn't work on Linux at the moment!"
-        exit
-        else
-        :
-        fi
-    if [ "$check" = "0x8012" ]; then
+	echo iOS 16.1+ used, converting APFS ramdisk to HFS+
+	mkdir -p /tmp/SSHRD_APFS
+	mkdir -p /tmp/SSHRD_HFS
+	"$oscheck"/apfs-fuse -o allow_other work/ramdisk.dmg /tmp/SSHRD_APFS
+	dd if=/dev/zero of=work/ramdisk1.dmg bs=1M count=400
+	"$oscheck"/newfs_hfs -v SSHRD work/ramdisk1.dmg
+	mount -o loop work/ramdisk1.dmg /tmp/SSHRD_HFS
+	rsync -a /tmp/SSHRD_APFS/root/ /tmp/SSHRD_HFS/
+	tar -xf sshtars/ssh.tar -C /tmp/SSHRD_HFS/
+	umount /tmp/SSHRD_HFS
+	umount /tmp/SSHRD_APFS
+	rm -rf /temp/SSHRD_HFS
+	rm -rf /temp/SSHRD_APFS
+	echo APFS Converted to HFS Successfully
+    elif [ "$check" = "0x8012" ]; then
         "$oscheck"/hfsplus work/ramdisk.dmg grow 133169152 > /dev/null
     else
         "$oscheck"/hfsplus work/ramdisk.dmg grow 210000000 > /dev/null
@@ -383,15 +391,13 @@ else
     else
     :
         fi
+	if [ "$darwin_major" -lt 22 ] || ([ "$darwin_major" -eq 22 ] && ([ "$minor" -lt 1 ])); then
         "$oscheck"/hfsplus work/ramdisk.dmg untar sshtars/ssh.tar > /dev/null
+	fi
     fi
 fi
-if [ "$oscheck" = 'Darwin' ]; then
 if [ "$darwin_major" -gt 22 ] || ([ "$darwin_major" -eq 22 ] && ([ "$minor" -gt 1 ] || [ "$minor" -eq 1 ] && [ "$patch" -ge 0 ])); then
 "$oscheck"/img4 -i work/ramdisk1.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
-else
-"$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
-fi
 else
 "$oscheck"/img4 -i work/ramdisk.dmg -o sshramdisk/ramdisk.img4 -M work/IM4M -A -T rdsk
 fi
