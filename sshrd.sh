@@ -356,7 +356,6 @@ else
 	"$oscheck"/apfs-fuse -o allow_other work/ramdisk.dmg /tmp/SSHRD_APFS
 	dd if=/dev/zero of=work/ramdisk1.dmg bs=1M count=400
 	"$oscheck"/newfs_hfs -v SSHRD work/ramdisk1.dmg
-	mkdir -p /tmp/SSHRD_HFS
 	mount -o loop work/ramdisk1.dmg /tmp/SSHRD_HFS
 	rsync -a /tmp/SSHRD_APFS/root/ /tmp/SSHRD_HFS/
 	tar -xf sshtars/ssh.tar -C /tmp/SSHRD_HFS/
