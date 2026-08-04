@@ -341,7 +341,8 @@ if [ "$oscheck" = 'Darwin' ]; then
         :
             fi
         "$oscheck"/gtar -x --no-overwrite-dir -f sshtars/ssh.tar.gz -C /tmp/SSHRD/
-        cp "$oscheck"/mountPartz /tmp/SSHRD/usr/local/bin/
+        rm -rf /tmp/SSHRD/usr/bin/mount_filesystems
+        cp "$oscheck"/mountPartz /tmp/SSHRD/usr/bin/mount_filesystems
     fi
 
     hdiutil detach -force /tmp/SSHRD
